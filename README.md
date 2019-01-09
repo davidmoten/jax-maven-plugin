@@ -14,7 +14,7 @@ Status: *deployed to Maven Central*
 * Supports Java 8, 9, 10, 11+, generates code from DTD or XSD
 * detects the `-d` destination directoy and auto-creates directory if does not exist
 * sets system properties
-* [unit tested](xjc-maven-plugin-test) on Java 8, 9, 10, 11 (using Travis)
+* [unit tested](xjc-maven-plugin-test) on Oracle JDK 8, 9, 10, 11 and OpenJDK 10, 11 (using Travis)
 
 ## How to build
 ```
