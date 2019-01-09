@@ -13,9 +13,26 @@
 
     <properties>
         <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
+        <jaxb.version>2.3.0</jaxb.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
+        
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>
@@ -53,7 +70,8 @@
                                 <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
                             </systemProperties>
                             <arguments>
-                                <!--  These are the arguments you would normally have put with a call to xjc -->
+                                <!-- These are the arguments you would normally 
+                                    have put with a call to xjc -->
                                 <argument>-verbose</argument>
                                 <argument>-d</argument>
                                 <argument>${jaxb.generated}</argument>
