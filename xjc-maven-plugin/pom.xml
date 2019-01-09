@@ -12,51 +12,9 @@
     <packaging>maven-plugin</packaging>
 
     <properties>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <scm.url>scm:git:https://github.com/davidmoten/xjc-maven-plugin.git</scm.url>
         <maven.plugin.version>3.6.0</maven.plugin.version>
         <glassfish.jaxb.version>2.4.0-b180830.0438</glassfish.jaxb.version>
     </properties>
-
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
-        </license>
-    </licenses>
-
-    <ciManagement>
-        <system>Travis</system>
-        <url>https://travis-ci.org/davidmoten/xjc-maven-plugin</url>
-    </ciManagement>
-
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/davidmoten/xjc-maven-plugin/issues</url>
-    </issueManagement>
-
-    <inceptionYear>2018</inceptionYear>
-    <developers>
-        <developer>
-            <id>dave</id>
-            <name>Dave Moten</name>
-            <url>https://github.com/davidmoten/</url>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-            </roles>
-            <timezone>+10</timezone>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>${scm.url}</connection>
-        <developerConnection>${scm.url}</developerConnection>
-        <url>${scm.url}</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <dependencies>
 
@@ -100,7 +58,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>${compiler.plugin.version}</version>
                 <configuration>
                     <source>${maven.compiler.target}</source>
                     <target>${maven.compiler.target}</target>
