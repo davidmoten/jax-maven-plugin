@@ -11,6 +11,10 @@
     <artifactId>xjc-maven-plugin-test</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -28,15 +32,83 @@
                 <executions>
                     <execution>
                         <id>gen</id>
+                        <!-- generate sources from the java.util.logging 
+                            DTD -->
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>xjc</goal>
                         </goals>
                         <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <argument>-verbose</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}</argument>
+                                <argument>-p</argument>
+                                <argument>dummy</argument>
+                                <argument>-dtd</argument>
+                                <argument>${project.basedir}/src/main/dtd/logger.dtd</argument>
+                            </arguments>
                         </configuration>
-                   </execution>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${jaxb.generated}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.github.davidmoten
+                                        </groupId>
+                                        <artifactId>
+                                            xjc-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [0.1-SNAPSHOT,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>xjc</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
