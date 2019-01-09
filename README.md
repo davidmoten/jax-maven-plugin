@@ -23,7 +23,7 @@ mvn clean install
 
 ## Getting started
 
-Here's an example where we generate java classes with package `dummy` from a DTD file:
+Here's an example where we generate java classes with package `dummy` from a DTD file (pretty much a copy and paste from the [unit test project](xjc-maven-plugin-test)):
 
 ```xml
 <properties>
