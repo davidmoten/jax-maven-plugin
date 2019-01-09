@@ -2,7 +2,9 @@
 <a href="https://travis-ci.org/davidmoten/xjc-maven-plugin"><img src="https://travis-ci.org/davidmoten/xjc-maven-plugin.svg"/></a><br/>
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/xjc-maven-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/xjc-maven-plugin)
 
-The `xjc` executable is not present in the JDK as of version 11. The functionality of `xjc` is still available (right down to the command line arguments to that original executable) via the method call `com.sun.tools.xjc.Driver.run` (from the artifact *org.glassfish.jaxb:jaxb-xjc*). *xjc-maven-plugin* sets up the classpath dependencies and passes the arguments you provide directly through to the mentioned `run` method.
+The `xjc` executable is not present in the JDK as of version 11. However, the functionality of `xjc` is still available (right down to the command line arguments to that original executable) via external artifacts like *org.glassfish.jaxb:jaxb-xjc*.
+
+*xjc-maven-plugin* sets up the classpath dependencies and passes the arguments you provide directly through to the mentioned the method call `com.sun.tools.xjc.Driver.run` method.
 
 * Supports Java 8, 9, 10, 11+, generates code from DTD or XSD
 * detects the `-d` destination directoy and auto-creates directory if does not exist
@@ -76,3 +78,6 @@ Here's an example where we generate java classes with package `dummy` from a DTD
     </executions>
 </plugin>
 ```
+
+## Arguments
+See the Java 8 xjc [docs](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
