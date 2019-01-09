@@ -21,6 +21,22 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.github.davidmoten</groupId>
+                <artifactId>xjc-maven-plugin</artifactId>
+                <version>${project.parent.version}</version>
+                <executions>
+                    <execution>
+                        <id>gen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                        </configuration>
+                   </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
