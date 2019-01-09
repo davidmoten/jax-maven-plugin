@@ -8,6 +8,7 @@ The `xjc` executable is not present in the JDK as of version 11. The functionali
 * detects the `-d` destination directoy and auto-creates directory if does not exist
 * sets system properties
 * [unit tested](xjc-maven-plugin-test) on Java 8, 9, 10, 11 (using Travis)
+* inspired by [discussion](https://github.com/mojohaus/jaxb2-maven-plugin/issues/43) on *jaxb2-maven-plugin*
 
 Status: *deployed to Maven Central*
 
