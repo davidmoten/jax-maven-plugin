@@ -8,13 +8,13 @@ The `xjc` executable is not present in the JDK as of version 11. However, the fu
 
 The development of this plugin was motivated by [problems](https://github.com/mojohaus/jaxb2-maven-plugin/issues/43) with the *jaxb2-maven-plugin* with Java 9+. My company's codebase used *jaxb2-maven-plugin* in ~10 locations (always the `xjc` goal) and we wanted to move to OpenJDK 11+ given the EOL (unpaid) for Oracle Java 8 in January 2019.
 
+Status: *deployed to Maven Central*
+
 ## Features
 * Supports Java 8, 9, 10, 11+, generates code from DTD or XSD
 * detects the `-d` destination directoy and auto-creates directory if does not exist
 * sets system properties
 * [unit tested](xjc-maven-plugin-test) on Java 8, 9, 10, 11 (using Travis)
-
-Status: *deployed to Maven Central*
 
 ## How to build
 ```
