@@ -3,6 +3,7 @@ The `xjc` executable is not present in the JDK as of version 11. The functionali
 
 * Supports Java 8, 9, 10, 11+, generates code from DTD or XSD
 * detects the `-d` destination directoy and auto-creates directory if does not exist
+* [unit tested](xjc-maven-plugin-test)
 
 Status: *deployed to Maven Central*
 
