@@ -15,6 +15,16 @@
         <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
     </properties>
 
+    <dependencies>
+        <!-- test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -75,11 +85,12 @@
                 </executions>
             </plugin>
         </plugins>
-        
+
         <!-- FOR ECLIPSE ONLY, DISABLES A WARNING -->
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!--This plugin's configuration is used to store Eclipse 
+                    m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
