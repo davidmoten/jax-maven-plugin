@@ -32,8 +32,7 @@ Here's an example where we generate java classes with package `dummy` from a DTD
     <executions>
         <execution>
             <id>gen</id>
-            <!-- generate sources from the java.util.logging 
-                DTD -->
+            <!-- generate sources from the java.util.logging DTD -->
             <phase>generate-sources</phase>
             <goals>
                 <goal>xjc</goal>
