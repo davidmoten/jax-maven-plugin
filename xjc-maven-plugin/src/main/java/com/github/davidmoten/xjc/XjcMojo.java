@@ -40,7 +40,9 @@ public final class XjcMojo extends AbstractMojo {
         try {
             log.info("running com.sun.tools.xjc.Driver.run method with arguments:\n"
                     + arguments.stream().map(x -> "  " + x).collect(Collectors.joining("\n")));
-            com.sun.tools.xjc.Driver.run(arguments.toArray(new String[] {}), System.out, System.out);
+            if (com.sun.tools.xjc.Driver.run(arguments.toArray(new String[] {}), System.out, System.out)!= 0) {
+                throw new MojoExecutionException("xjc failed, see log above for details");
+            };
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
