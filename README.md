@@ -21,7 +21,7 @@ Status: *deployed to Maven Central*
 mvn clean install
 ```
 
-### Getting started
+## Getting started
 
 Here's an example where we generate java classes with package `dummy` from a DTD file:
 
