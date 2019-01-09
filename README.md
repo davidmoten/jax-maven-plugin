@@ -82,4 +82,4 @@ Here's an example where we generate java classes with package `dummy` from a DTD
 ```
 
 ## Arguments
-See the Java 8 xjc [docs](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
+See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
