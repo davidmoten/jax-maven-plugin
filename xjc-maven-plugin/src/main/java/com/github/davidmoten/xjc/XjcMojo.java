@@ -37,6 +37,27 @@ public final class XjcMojo extends AbstractMojo {
 
         log.info("xjc mojo finished");
     }
+    
+    private void ensureDestinationDirectoryExists() {
+        for (int i = 0; i < arguments.size(); i++) {
+            if (arguments.get(i).trim().equals("-d") && i < arguments.size() - 1) {
+                File dir = new File(arguments.get(i + 1));
+                if (!dir.exists()) {
+                    getLog().info("destination directory (-d option) specified and does not exist, creating: " + dir);
+                    dir.mkdirs();
+                }
+            }
+        }
+    }
+    
+    private void setSystemProperties() {
+        if (systemProperties != null) {
+            getLog().info("setting system properties: " + systemProperties);
+            for (Entry<String, String> entry : systemProperties.entrySet()) {
+                System.setProperty(entry.getKey(), entry.getValue());
+            }
+        }
+    }
 
     private void callXjc() throws MojoExecutionException {
         try {
@@ -50,27 +71,6 @@ public final class XjcMojo extends AbstractMojo {
             }
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
-        }
-    }
-
-    private void setSystemProperties() {
-        if (systemProperties != null) {
-            getLog().info("setting system properties: " + systemProperties);
-            for (Entry<String, String> entry : systemProperties.entrySet()) {
-                System.setProperty(entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
-    private void ensureDestinationDirectoryExists() {
-        for (int i = 0; i < arguments.size(); i++) {
-            if (arguments.get(i).trim().equals("-d") && i < arguments.size() - 1) {
-                File dir = new File(arguments.get(i + 1));
-                if (!dir.exists()) {
-                    getLog().info("destination directory (-d option) specified and does not exist, creating: " + dir);
-                    dir.mkdirs();
-                }
-            }
         }
     }
 
