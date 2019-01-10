@@ -59,7 +59,7 @@ Here's an example where we generate java classes with package `dummy` from a DTD
         </execution>
     </executions>
 </plugin>
-<!-- add the generated sources to source -->
+<!-- ensure the generated sources are on the classpath (and in built jar) -->
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
