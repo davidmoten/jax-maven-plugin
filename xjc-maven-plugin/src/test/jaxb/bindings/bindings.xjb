@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+                xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
+    version="2.1">
+    
+    <jaxb:bindings schemaLocation="../xsd/person.xsd" node="/xsd:schema">
+        <jaxb:schemaBindings>
+            <jaxb:package name="pkg" />
+        </jaxb:schemaBindings> 
+    </jaxb:bindings>
+    
+    <jaxb:bindings schemaLocation="../xsd/place.xsd" node="/xsd:schema">
+        <jaxb:schemaBindings>
+            <jaxb:package name="pkg2" />
+        </jaxb:schemaBindings> 
+    </jaxb:bindings>
+</jaxb:bindings>

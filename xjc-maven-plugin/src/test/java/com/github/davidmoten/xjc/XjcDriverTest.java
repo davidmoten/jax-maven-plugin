@@ -12,19 +12,21 @@ import com.sun.tools.xjc.Driver;
 public class XjcDriverTest {
 
     @Test
-    public void testDriverRunWithBindings() throws Exception {
-//        System.setProperty("enableExternalEntityProcessing", "true");
-        String bindings = new File("src/test/bindings").getAbsolutePath();
-        String xsd = new File("src/test/xsd").getAbsolutePath();
-        String[] args = new String[] {
+    public void testDriverRunWithPersonSchemaWithBindings() throws Exception {
+        // System.setProperty("enableExternalEntityProcessing", "true");
+        String bindings = new File("src/test/jaxb/bindings").getAbsolutePath();
+        String xsd = new File("src/test/jaxb/xsd").getAbsolutePath();
+        String[] args = new String[] { //
                 "-verbose", //
-                "-b", bindings, //
                 "-d", "target", //
                 xsd, //
+                "-b", bindings //
         };
 
         assertEquals(0, Driver.run(args, System.out, System.out));
         assertTrue(new File("target/pkg/ObjectFactory.java").exists());
+        assertTrue(new File("target/pkg/Person.java").exists());
+        assertTrue(new File("target/pkg2/Place.java").exists());
     }
 
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns="http://test.place" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://test.place">
+    <xsd:element name="place" type="place"/>
+    
+    <xsd:complexType name="place">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
