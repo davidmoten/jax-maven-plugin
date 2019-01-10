@@ -9,6 +9,9 @@
         <jaxb:schemaBindings>
             <jaxb:package name="pkg" />
         </jaxb:schemaBindings> 
+        <jaxb:bindings node="//xsd:complexType[@name='person']//xsd:sequence//xsd:element[@name='name']">
+            <jaxb:property name="name2" />
+        </jaxb:bindings>
     </jaxb:bindings>
     
     <jaxb:bindings schemaLocation="../xsd/place.xsd" node="/xsd:schema">

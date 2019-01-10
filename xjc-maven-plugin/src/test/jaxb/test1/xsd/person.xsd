@@ -7,4 +7,5 @@
             <xsd:element name="name" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
+    
 </xsd:schema>
