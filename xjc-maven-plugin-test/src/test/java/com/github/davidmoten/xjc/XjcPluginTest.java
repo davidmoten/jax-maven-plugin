@@ -6,7 +6,7 @@ import dummy.ObjectFactory;
 import dummy.Param;
 import dummy.Record;
 
-public class XjcMojoTest {
+public class XjcPluginTest {
     
     @Test
     public void testClassesGeneratedFromDtd() {
