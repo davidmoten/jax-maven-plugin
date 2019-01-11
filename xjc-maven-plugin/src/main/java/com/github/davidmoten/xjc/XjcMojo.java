@@ -73,7 +73,12 @@ public final class XjcMojo extends AbstractMojo {
 
         Log log = getLog();
 
+        ////////////////////////////////////////////////////////
+        //
         // get the classpath entries for the deps of jaxb-xjc
+        //
+        ////////////////////////////////////////////////////////
+
         Artifact artifact = repositorySystem.createArtifact( //
                 "org.glassfish.jaxb", "jaxb-xjc", JAXB_XJC_VERSION, "", "jar");
 
@@ -91,7 +96,12 @@ public final class XjcMojo extends AbstractMojo {
         classpath.append( //
                 Stream.concat(artifactEntry, dependencyEntries).collect(Collectors.joining(File.pathSeparator)));
 
+        ////////////////////////////////////////////////////////
+        //
         // now grab the classpath entry for xjc-maven-plugin-core
+        //
+        ////////////////////////////////////////////////////////
+
         final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
         for (final URL url : classLoader.getURLs()) {
