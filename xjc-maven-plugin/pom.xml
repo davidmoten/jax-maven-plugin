@@ -13,14 +13,9 @@
 
     <properties>
         <maven.plugin.version>3.6.0</maven.plugin.version>
-        <!-- note that if you change the jaxb version you need to change 
-            the hard-coded version in XjcMojo as well -->
-        <glassfish.jaxb.version>2.4.0-b180830.0438</glassfish.jaxb.version>
     </properties>
 
     <dependencies>
-
-
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>

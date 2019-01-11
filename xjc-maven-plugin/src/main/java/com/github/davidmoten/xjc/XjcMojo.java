@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 public final class XjcMojo extends AbstractMojo {
 
     // TODO should match version from pom.xml!
-    private static final String JAXB_XJC_VERSION = "2.4.0-b180830.0438";
+    private static final String JAXB_XJC_VERSION = "2.4.0-b180830.0438";// "2.4.0-b180830.0438";
 
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
@@ -44,6 +44,9 @@ public final class XjcMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${localRepository}", readonly = true, required = true)
     private ArtifactRepository localRepository;
+
+    @Parameter(defaultValue = "${remoteArtifactRepositories}", readonly = true, required = true)
+    private List<ArtifactRepository> remoteRepositories;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -61,7 +64,8 @@ public final class XjcMojo extends AbstractMojo {
                     .redirectOutput(System.out) //
                     .redirectError(System.out) //
                     .execute();
-        } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
+        } catch (InvalidExitValueException | IOException | InterruptedException
+                | TimeoutException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
         log.info("xjc mojo finished");
@@ -94,7 +98,8 @@ public final class XjcMojo extends AbstractMojo {
 
         StringBuilder classpath = new StringBuilder();
         classpath.append( //
-                Stream.concat(artifactEntry, dependencyEntries).collect(Collectors.joining(File.pathSeparator)));
+                Stream.concat(artifactEntry, dependencyEntries) //
+                        .collect(Collectors.joining(File.pathSeparator)));
 
         ////////////////////////////////////////////////////////
         //
@@ -102,11 +107,12 @@ public final class XjcMojo extends AbstractMojo {
         //
         ////////////////////////////////////////////////////////
 
-        final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+        final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread()
+                .getContextClassLoader();
 
         for (final URL url : classLoader.getURLs()) {
             File file = new File(url.getFile());
-            log.debug("classpath entry: " + file.getAbsolutePath());
+            log.debug("plugin classpath entry: " + file.getAbsolutePath());
             // Note the contains check on xjc-maven-plugin-core because Travis runs mvn test
             // -B which gives us a classpath entry of xjc-maven-plugin-core/target/classes
             // (not a jar)
@@ -117,10 +123,11 @@ public final class XjcMojo extends AbstractMojo {
                 classpath.append(file.getAbsolutePath());
             }
         }
-        log.debug("classpath=\n  " + classpath.toString().replace(File.pathSeparator, File.pathSeparator + "\n  "));
+        log.debug("isolated classpath for call to xjc=\n  "
+                + classpath.toString().replace(File.pathSeparator, File.pathSeparator + "\n  "));
 
-        final String javaExecutable = System.getProperty("java.home") + File.separator + "bin" + File.separator
-                + "java";
+        final String javaExecutable = System.getProperty("java.home") + File.separator + "bin"
+                + File.separator + "java";
         List<String> command = Lists.newArrayList( //
                 javaExecutable, //
                 "-classpath", //
@@ -141,6 +148,7 @@ public final class XjcMojo extends AbstractMojo {
         ArtifactResolutionRequest request = new ArtifactResolutionRequest() //
                 .setArtifact(artifact) //
                 .setLocalRepository(localRepository) //
+                .setRemoteRepositories(remoteRepositories) //
                 .setResolveTransitively(true);
         return repositorySystem.resolve(request);
     }
@@ -150,7 +158,9 @@ public final class XjcMojo extends AbstractMojo {
             if (arguments.get(i).trim().equals("-d") && i < arguments.size() - 1) {
                 File dir = new File(arguments.get(i + 1));
                 if (!dir.exists()) {
-                    getLog().info("destination directory (-d option) specified and does not exist, creating: " + dir);
+                    getLog().info(
+                            "destination directory (-d option) specified and does not exist, creating: "
+                                    + dir);
                     dir.mkdirs();
                 }
             }
