@@ -30,19 +30,4 @@ public class XjcDriverTest {
         assertTrue(new File("target/pkg2/Place.java").exists());
     }
     
-    @Test
-    public void testDriverRunWithKml2_2SchemaWithBindings() throws Exception {
-        System.setProperty("enableExternalEntityProcessing", "true");
-        String bindings = new File("src/test/jaxb/test2/bindings").getAbsolutePath();
-        String xsd = new File("src/test/jaxb/test2/xsd").getAbsolutePath();
-        String[] args = new String[] { //
-                "-verbose", //
-                "-d", "target", //
-                xsd, //
-                "-b", bindings //
-        };
-
-        assertEquals(0, Driver.run(args, System.out, System.out));
-    }
-
 }
