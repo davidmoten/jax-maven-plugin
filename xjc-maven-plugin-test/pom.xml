@@ -12,6 +12,7 @@
     <properties>
         <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
         <jaxb.version>2.3.0</jaxb.version>
+        <javadoc.version>3.0.1</javadoc.version>
     </properties>
 
     <dependencies>
@@ -100,7 +101,7 @@
                                     have put with a call to xjc -->
                                 <argument>-verbose</argument>
                                 <argument>-d</argument>
-                                <argument>${jaxb.generated}</argument>
+                                <argument>${jaxb.generated}-dontinclude</argument>
                                 <argument>${project.basedir}/src/main/jaxb/kml-2-2/xsd</argument>
                                 <argument>-b</argument>
                                 <argument>${project.basedir}/src/main/jaxb/kml-2-2/bindings</argument>
@@ -127,6 +128,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.version}</version>
+                <configuration>
+                   <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
 
