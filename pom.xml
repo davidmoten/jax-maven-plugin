@@ -20,6 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.8</maven.compiler.target>
         <compiler.plugin.version>3.8.0</compiler.plugin.version>
+        <glassfish.jaxb.version>2.4.0-b180830.0438</glassfish.jaxb.version>
     </properties>
 
     <licenses>
@@ -63,6 +64,7 @@
     </scm>
 
     <modules>
+        <module>xjc-maven-plugin-core</module>
         <module>xjc-maven-plugin</module>
         <module>xjc-maven-plugin-test</module>
     </modules>

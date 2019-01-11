@@ -1,14 +1,14 @@
 package com.github.davidmoten.xjc;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -17,7 +17,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.zeroturnaround.exec.InvalidExitValueException;
+import org.zeroturnaround.exec.ProcessExecutor;
+import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 @Mojo(name = "xjc")
@@ -31,19 +35,10 @@ public final class XjcMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-
         Log log = getLog();
+        log.info("Starting xjc mojo");
 
-        // Artifact a = project //
-        // .getArtifacts() //
-        // .stream() //
-        // .filter(x -> x.getGroupId().equals("org.glassfish.jaxb") &&
-        // x.getArtifactId().equals("jaxb-xjc")) //
-        // .findFirst() //
-        // .get();
-        //
-
-        // System.out.println("dependencyTrail=" + a.getDependencyTrail());
+        ensureDestinationDirectoryExists();
 
         String v = "-2.4.0-b180830.0438.jar";
         Set<String> filenames = Sets.newHashSet("jaxb-xjc" + v, //
@@ -64,34 +59,45 @@ public final class XjcMojo extends AbstractMojo {
         );
         final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
         StringBuilder classpath = new StringBuilder();
-        Set<String> found = Sets.newHashSet();
         for (final URL url : classLoader.getURLs()) {
             File file = new File(url.getFile());
             log.info("classpath entry: " + file.getName());
-            if (filenames.contains(file.getName())) {
-                found.add(file.getName());
+            if (filenames.contains(file.getName()) || file.getName().startsWith("xjc-maven-plugin-core")) {
                 if (classpath.length() > 0) {
                     classpath.append(File.pathSeparator);
                 }
                 classpath.append(file.getAbsolutePath());
             }
         }
-        if ( filenames.size() != found.size()) {
-            Set<String> set = new HashSet<String>(filenames);
-            set.removeAll(found);
-            throw new MojoExecutionException(
-                    "did not find all expected classpath. Missing " + set);
-        }
         log.info("classpath=" + classpath);
 
-        log.info("Starting xjc mojo");
+        final String javaExecutable = System.getProperty("java.home") + File.separator + "bin" + File.separator
+                + "java";
+        List<String> command = Lists.newArrayList( //
+                javaExecutable, //
+                "-classpath", //
+                classpath.toString());
+        // TODO escape key and value properly
+        if (systemProperties != null) {
+            command.addAll(systemProperties //
+                    .entrySet() //
+                    .stream() //
+                    .map(entry -> "-D" + entry.getKey() + "=" + entry.getValue()) //
+                    .collect(Collectors.toList()));
+        }
+        command.add(DriverMain.class.getName());
+        command.addAll(arguments);
 
-        setSystemProperties();
-
-        ensureDestinationDirectoryExists();
-
-        callXjc();
-
+        try {
+            new ProcessExecutor() //
+                    .command(command) //
+                    .exitValueNormal() //
+                    .redirectOutput(System.out) //
+                    .redirectError(System.out) //
+                    .execute();
+        } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
         log.info("xjc mojo finished");
     }
 
@@ -103,15 +109,6 @@ public final class XjcMojo extends AbstractMojo {
                     getLog().info("destination directory (-d option) specified and does not exist, creating: " + dir);
                     dir.mkdirs();
                 }
-            }
-        }
-    }
-
-    private void setSystemProperties() {
-        if (systemProperties != null) {
-            getLog().info("setting system properties: " + systemProperties);
-            for (Entry<String, String> entry : systemProperties.entrySet()) {
-                System.setProperty(entry.getKey(), entry.getValue());
             }
         }
     }

@@ -13,7 +13,6 @@
 
     <properties>
         <mavenVersion>3.6.0</mavenVersion>
-        <glassfish.jaxb.version>2.4.0-b180830.0438</glassfish.jaxb.version>
     </properties>
 
     <dependencies>
@@ -48,9 +47,21 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>xjc-maven-plugin-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>javax.activation-api</artifactId>
             <version>1.2.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-exec</artifactId>
+            <version>1.10</version>
         </dependency>
 
         <!-- test -->
