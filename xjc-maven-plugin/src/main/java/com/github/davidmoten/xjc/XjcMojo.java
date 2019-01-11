@@ -6,12 +6,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
@@ -27,10 +26,12 @@ import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 @Mojo(name = "xjc")
 public final class XjcMojo extends AbstractMojo {
+
+    // TODO should match version from pom.xml!
+    private static final String JAXB_XJC_VERSION = "2.4.0-b180830.0438";
 
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
@@ -70,47 +71,43 @@ public final class XjcMojo extends AbstractMojo {
 
         // https://stackoverflow.com/questions/1440224/how-can-i-download-maven-artifacts-within-a-plugin
 
-        // get the current classpath (plugin classpath) and just hang on to the deps
-        // required for jaxb-xjc
-
-        // TODO use some sort of maven resolver component to find the deps of jaxb-xjc
-
         Log log = getLog();
-        String v = "-2.4.0-b180830.0438.jar";
-        Set<String> filenames = Sets.newHashSet("jaxb-xjc" + v, //
-                "jaxb-runtime" + v, //
-                "xsom" + v, //
-                "relaxng-datatype" + v, //
-                "codemodel" + v, //
-                "rngom" + v, //
-                "dtd-parser-1.4.jar", //
-                "istack-commons-tools-3.0.7.jar", //
-                "ant-1.10.2.jar", //
-                "ant-launcher-1.10.2.jar", //
-                "istack-commons-runtime-3.0.7.jar", //
-                "jaxb-api-2.4.0-b180830.0359.jar", //
-                "javax.activation-api-1.2.0.jar", //
-                "txw2" + v, //
-                "stax-ex-1.8.jar", //
-                "FastInfoset-1.2.15.jar" //
-        );
 
-        final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+        // get the classpath entries for the deps of jaxb-xjc
+        Artifact artifact = repositorySystem.createArtifact( //
+                "org.glassfish.jaxb", "jaxb-xjc", JAXB_XJC_VERSION, "", "jar");
+
+        log.info("setting up classpath for jaxb-xjc version " + JAXB_XJC_VERSION);
+
+        ArtifactResolutionResult r = resolve(artifact);
+
+        Stream<String> artifactEntry = Stream.of(artifact.getFile().getAbsolutePath());
+
+        Stream<String> dependencyEntries = r.getArtifactResolutionNodes() //
+                .stream() //
+                .map(x -> x.getArtifact().getFile().getAbsolutePath());
+
         StringBuilder classpath = new StringBuilder();
+        classpath.append( //
+                Stream.concat(artifactEntry, dependencyEntries).collect(Collectors.joining(File.pathSeparator)));
+
+        // now grab the classpath entry for xjc-maven-plugin-core
+        final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+
         for (final URL url : classLoader.getURLs()) {
             File file = new File(url.getFile());
-            log.info("classpath entry: " + file.getAbsolutePath());
+            log.debug("classpath entry: " + file.getAbsolutePath());
             // Note the contains check on xjc-maven-plugin-core because Travis runs mvn test
             // -B which gives us a classpath entry of xjc-maven-plugin-core/target/classes
             // (not a jar)
-            if (filenames.contains(file.getName()) || file.getAbsolutePath().contains("xjc-maven-plugin-core")) {
+            if (file.getAbsolutePath().contains("xjc-maven-plugin-core")) {
                 if (classpath.length() > 0) {
                     classpath.append(File.pathSeparator);
                 }
                 classpath.append(file.getAbsolutePath());
             }
         }
-        log.info("classpath=" + classpath);
+        log.debug("classpath=\n  " + classpath.toString().replace(File.pathSeparator, File.pathSeparator + "\n  "));
 
         final String javaExecutable = System.getProperty("java.home") + File.separator + "bin" + File.separator
                 + "java";
@@ -128,6 +125,14 @@ public final class XjcMojo extends AbstractMojo {
         command.add(DriverMain.class.getName());
         command.addAll(arguments);
         return command;
+    }
+
+    private ArtifactResolutionResult resolve(Artifact artifact) {
+        ArtifactResolutionRequest request = new ArtifactResolutionRequest() //
+                .setArtifact(artifact) //
+                .setLocalRepository(localRepository) //
+                .setResolveTransitively(true);
+        return repositorySystem.resolve(request);
     }
 
     private void ensureDestinationDirectoryExists() {
