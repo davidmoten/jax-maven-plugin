@@ -84,7 +84,7 @@ public final class XjcMojo extends AbstractMojo {
         StringBuilder classpath = new StringBuilder();
         for (final URL url : classLoader.getURLs()) {
             File file = new File(url.getFile());
-            log.info("classpath entry: " + file.getName());
+            log.info("classpath entry: " + file.getAbsolutePath());
             if (filenames.contains(file.getName()) || file.getName().startsWith("xjc-maven-plugin-core")) {
                 if (classpath.length() > 0) {
                     classpath.append(File.pathSeparator);
