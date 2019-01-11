@@ -59,7 +59,7 @@ public final class XjcMojo extends AbstractMojo {
         // required for jaxb-xjc
 
         // TODO use some sort of maven resolver component to find the deps of jaxb-xjc
-        
+
         Log log = getLog();
         String v = "-2.4.0-b180830.0438.jar";
         Set<String> filenames = Sets.newHashSet("jaxb-xjc" + v, //
@@ -85,7 +85,10 @@ public final class XjcMojo extends AbstractMojo {
         for (final URL url : classLoader.getURLs()) {
             File file = new File(url.getFile());
             log.info("classpath entry: " + file.getAbsolutePath());
-            if (filenames.contains(file.getName()) || file.getName().startsWith("xjc-maven-plugin-core")) {
+            // Note the contains check on xjc-maven-plugin-core because Travis runs mvn test
+            // -B which gives us a classpath entry of xjc-maven-plugin-core/target/classes
+            // (not a jar)
+            if (filenames.contains(file.getName()) || file.getAbsolutePath().contains("xjc-maven-plugin-core")) {
                 if (classpath.length() > 0) {
                     classpath.append(File.pathSeparator);
                 }
