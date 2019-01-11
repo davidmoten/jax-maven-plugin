@@ -31,7 +31,6 @@ public class XjcDriverTest {
     }
     
     @Test
-    @Ignore
     public void testDriverRunWithKml2_2SchemaWithBindings() throws Exception {
         System.setProperty("enableExternalEntityProcessing", "true");
         String bindings = new File("src/test/jaxb/test2/bindings").getAbsolutePath();

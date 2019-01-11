@@ -9,7 +9,7 @@
 		generateElementClass="false" 
 		mapSimpleTypeDef="false" 
 		generateMixedExtensions="false" 
-		optionalProperty="primitive">
+		>
 	</jaxb:globalBindings>
 
 	<jaxb:bindings schemaLocation="../xsd/atom-author-link.xsd" node="/xs:schema">
