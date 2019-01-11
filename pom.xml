@@ -9,7 +9,7 @@
         <version>0.1</version>
     </parent>
     <artifactId>xjc-maven-plugin-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.1.1</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
