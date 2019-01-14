@@ -106,5 +106,29 @@ Here's an example where we generate java classes with package `dummy` from an XS
 </plugin>
 ```
 
+## Output
+Here's sample output from the plugin:
+
+```
+[INFO] --- xjc-maven-plugin:0.1.3-SNAPSHOT:xjc (gen-from-dtd) @ xjc-maven-plugin-test ---
+[INFO] Starting xjc mojo
+[INFO] destination directory (-d option) specified and does not exist, creating: /home/dxm/Development/ide/eclipse/workspace-4.7/xjc-maven-plugin/xjc-maven-plugin-test/target/generated-sources/jaxb
+[INFO] setting up classpath for jaxb-xjc version 2.4.0-b180830.0438
+parsing a schema...
+compiling a schema...
+[INFO] generating code
+unknown location
+
+dummy/Exception.java
+dummy/Frame.java
+dummy/Log.java
+dummy/ObjectFactory.java
+dummy/Param.java
+dummy/Record.java
+[INFO] xjc mojo finished
+```
+
+Note that the `unknow location` line is associated with the `[INFO] generating code` line and can be ignored (it's supposed to report where in the input files an error is coming from but this informative log line is not associated with a real problem so no location is included).
+
 ## Arguments
 See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
