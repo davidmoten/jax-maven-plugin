@@ -130,5 +130,11 @@ dummy/Record.java
 
 Note that the `unknow location` line is associated with the `[INFO] generating code` line and can be ignored (it's supposed to report where in the input files an error is coming from but this informative log line is not associated with a real problem so no location is included).
 
+If you want more detail including all classpath items for the `xjc` call then call:
+
+```bash
+mvn clean install -X
+```
+
 ## Arguments
 See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
