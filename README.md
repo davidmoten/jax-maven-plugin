@@ -17,12 +17,12 @@ Status: *deployed to Maven Central*
 * [unit tested](xjc-maven-plugin-test) on Oracle JDK 8, 9, 10, 11 and OpenJDK 10, 11 (using Travis)
 
 ## What about exec-maven-plugin?
-It is possible to use `exec-maven-plugin` to call `xjc` via the `java` goal or `exec` goal to call `XJCFacade`. There are problems though:
+It is possible to use *exec-maven-plugin* to call `xjc` via the `java` goal or `exec` goal to call `XJCFacade.main`. There are problems though:
 
 * With `exec:java` you can call `XJCFacade.main` having setup the classpath with the `jaxb-xjc` dependency **but** `XJCFacade.main` calls `System.exit` so that after generating your classes the maven build is killed. Obviously terrible when you want stuff to happen after generating the classes!
-* With `exec:exec` you can call `XJCFacade.main` forked so that the `System.exit` doesn't kill the build **but** you have to build the classpath yourself (16 dependencies).
+* With `exec:exec` you can call `XJCFacade.main` forked so that the `System.exit` doesn't kill the build **but** you have to build the classpath yourself (16 dependencies without maven to help you).
 
-Instead of these poor options, use `xjc-maven-plugin`!
+Instead of these poor options, use *xjc-maven-plugin*!
 
 ## How to build
 ```
