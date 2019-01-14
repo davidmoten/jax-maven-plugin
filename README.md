@@ -31,7 +31,7 @@ mvn clean install
 
 ## Getting started
 
-Here's an example where we generate java classes with package `dummy` from a DTD file (pretty much a copy and paste from the [unit test project](xjc-maven-plugin-test)):
+Here's an example where we generate java classes with package `dummy` from an XSD file (pretty much a copy and paste from the [unit test project](xjc-maven-plugin-test)):
 
 ```xml
 <properties>
@@ -54,15 +54,32 @@ Here's an example where we generate java classes with package `dummy` from a DTD
                 <systemProperties>
                     <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
                 </systemProperties>
-                <arguments>
-                    <argument>-verbose</argument>
-                    <argument>-d</argument>
-                    <argument>${jaxb.generated}</argument>
-                    <argument>-p</argument>
-                    <argument>dummy</argument>
-                    <argument>-dtd</argument>
-                    <argument>${project.basedir}/src/main/dtd/logger.dtd</argument>
-                </arguments>
+                <execution>
+                        <id>gen-from-xsd-kml</id>
+                        <!-- generate sources from the kml 2.2 xsd -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <!-- These are the arguments you would normally 
+                                     have used with a call to xjc -->
+                                <argument>-verbose</argument>
+                                <!-- set the directory to hold generated classees -->
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}</argument>
+                                <! -- set the directory containing schemas to convert to classes -->
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/xsd</argument>
+                                <!-- set the directory containing jaxb bindings (customizations) -->
+                                <argument>-b</argument>
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/bindings</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
             </configuration>
         </execution>
     </executions>
