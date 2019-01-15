@@ -129,7 +129,7 @@ dummy/Record.java
 [INFO] xjc mojo finished
 ```
 
-Note that the `unknow location` line is associated with the `[INFO] generating code` line and can be ignored (it's supposed to report where in the input files an error is coming from but this informative log line is not associated with a real problem so no location is included).
+Note that the `unknown location` line is associated with the `[INFO] generating code` line and can be ignored (it's supposed to report where in the input files an error is coming from but this INFO-level log line is not associated with a real problem so no location is included).
 
 If you want more detail including all classpath items for the `xjc` call then call:
 
