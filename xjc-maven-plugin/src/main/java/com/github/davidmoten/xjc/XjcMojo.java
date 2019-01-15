@@ -143,7 +143,7 @@ public final class XjcMojo extends AbstractMojo {
         return command;
     }
 
-    private String readJaxbVersion() {
+    private static String readJaxbVersion() {
         Properties p = new Properties();
         try {
             p.load(XjcMojo.class.getResourceAsStream("/configuration.properties"));
