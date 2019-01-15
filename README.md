@@ -139,3 +139,6 @@ mvn clean install -X
 
 ## Arguments
 See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
+
+## Update the JAXB version used
+For project maintainers, to use a new version of *jaxb-xjc* just update the `glassfish.jaxb.version` in the root pom.xml.
