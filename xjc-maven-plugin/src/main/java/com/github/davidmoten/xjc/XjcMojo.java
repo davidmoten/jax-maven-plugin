@@ -2,10 +2,12 @@ package com.github.davidmoten.xjc;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,9 +31,6 @@ import com.google.common.collect.Lists;
 
 @Mojo(name = "xjc")
 public final class XjcMojo extends AbstractMojo {
-
-    // TODO should match version from pom.xml!
-    private static final String JAXB_XJC_VERSION = "2.4.0-b180830.0438";// "2.4.0-b180830.0438";
 
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
@@ -64,8 +63,7 @@ public final class XjcMojo extends AbstractMojo {
                     .redirectOutput(System.out) //
                     .redirectError(System.out) //
                     .execute();
-        } catch (InvalidExitValueException | IOException | InterruptedException
-                | TimeoutException e) {
+        } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
         log.info("xjc mojo finished");
@@ -77,6 +75,8 @@ public final class XjcMojo extends AbstractMojo {
 
         Log log = getLog();
 
+        String jaxbVersion = readJaxbVersion();
+
         ////////////////////////////////////////////////////////
         //
         // get the classpath entries for the deps of jaxb-xjc
@@ -84,9 +84,9 @@ public final class XjcMojo extends AbstractMojo {
         ////////////////////////////////////////////////////////
 
         Artifact artifact = repositorySystem.createArtifact( //
-                "org.glassfish.jaxb", "jaxb-xjc", JAXB_XJC_VERSION, "", "jar");
+                "org.glassfish.jaxb", "jaxb-xjc", jaxbVersion, "", "jar");
 
-        log.info("setting up classpath for jaxb-xjc version " + JAXB_XJC_VERSION);
+        log.info("setting up classpath for jaxb-xjc version " + jaxbVersion);
 
         ArtifactResolutionResult r = resolve(artifact);
 
@@ -107,8 +107,7 @@ public final class XjcMojo extends AbstractMojo {
         //
         ////////////////////////////////////////////////////////
 
-        final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread()
-                .getContextClassLoader();
+        final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
         for (final URL url : classLoader.getURLs()) {
             File file = new File(url.getFile());
@@ -126,8 +125,8 @@ public final class XjcMojo extends AbstractMojo {
         log.debug("isolated classpath for call to xjc=\n  "
                 + classpath.toString().replace(File.pathSeparator, File.pathSeparator + "\n  "));
 
-        final String javaExecutable = System.getProperty("java.home") + File.separator + "bin"
-                + File.separator + "java";
+        final String javaExecutable = System.getProperty("java.home") + File.separator + "bin" + File.separator
+                + "java";
         List<String> command = Lists.newArrayList( //
                 javaExecutable, //
                 "-classpath", //
@@ -144,6 +143,16 @@ public final class XjcMojo extends AbstractMojo {
         return command;
     }
 
+    private String readJaxbVersion() {
+        Properties p = new Properties();
+        try {
+            p.load(XjcMojo.class.getResourceAsStream("/configuration.properties"));
+            return p.getProperty("glassfish.jaxb.version");
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
     private ArtifactResolutionResult resolve(Artifact artifact) {
         ArtifactResolutionRequest request = new ArtifactResolutionRequest() //
                 .setArtifact(artifact) //
@@ -158,9 +167,7 @@ public final class XjcMojo extends AbstractMojo {
             if (arguments.get(i).trim().equals("-d") && i < arguments.size() - 1) {
                 File dir = new File(arguments.get(i + 1));
                 if (!dir.exists()) {
-                    getLog().info(
-                            "destination directory (-d option) specified and does not exist, creating: "
-                                    + dir);
+                    getLog().info("destination directory (-d option) specified and does not exist, creating: " + dir);
                     dir.mkdirs();
                 }
             }
