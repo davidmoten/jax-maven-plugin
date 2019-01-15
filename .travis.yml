@@ -1,4 +1,6 @@
 language: java
+before_install:
+- rm ~/.m2/settings.xml
 jdk:
   - oraclejdk8
   - oraclejdk9
