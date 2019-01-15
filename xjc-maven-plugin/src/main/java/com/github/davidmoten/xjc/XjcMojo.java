@@ -16,6 +16,8 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.ResolutionListener;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -153,13 +155,92 @@ public final class XjcMojo extends AbstractMojo {
         }
     }
 
+    private static String spaces(int n) {
+        StringBuilder b = new StringBuilder(n);
+        for (int i = 0; i < n; i++) {
+            b.append("  ");
+        }
+        return b.toString();
+    }
+
     private ArtifactResolutionResult resolve(Artifact artifact) {
+        Log log = getLog();
         ArtifactResolutionRequest request = new ArtifactResolutionRequest() //
                 .setArtifact(artifact) //
                 .setLocalRepository(localRepository) //
                 .setRemoteRepositories(remoteRepositories) //
-                .setResolveTransitively(true);
+                .setResolveTransitively(true) //
+                .addListener(new ResolutionListener() {
+
+                    int depth = 0;
+
+                    private void log(String message) {
+                        log.info(spaces(depth) + message);
+                    }
+
+                    @Override
+                    public void testArtifact(Artifact artifact) {
+                        log("testArtifact: " + artifact.getArtifactId());
+                    }
+
+                    @Override
+                    public void startProcessChildren(Artifact artifact) {
+                        log("startProcessChildren: " + string(artifact));
+                        depth++;
+                    }
+
+                    @Override
+                    public void endProcessChildren(Artifact artifact) {
+                        depth--;
+                        log("endProcessChildren: " + string(artifact));
+                    }
+
+                    @Override
+                    public void includeArtifact(Artifact artifact) {
+                        log("includeArtifact: " + string(artifact));
+                    }
+
+                    @Override
+                    public void omitForNearer(Artifact omitted, Artifact kept) {
+                        log("omitForNearer: omitted=" + string(omitted) + ", kept=" + string(kept));
+                    }
+
+                    @Override
+                    public void updateScope(Artifact artifact, String scope) {
+                        log("updateScope: " + string(artifact) + ", scope=" + scope);
+                    }
+
+                    @Override
+                    public void manageArtifact(Artifact artifact, Artifact replacement) {
+                        log("manageArtifact: " + string(artifact) + ", replacement=" + string(replacement));
+                    }
+
+                    @Override
+                    public void omitForCycle(Artifact artifact) {
+                        log("omitForCycle: " + string(artifact));
+                    }
+
+                    @Override
+                    public void updateScopeCurrentPom(Artifact artifact, String ignoredScope) {
+                        log("updateScopeCurrentPom: " + string(artifact));
+                    }
+
+                    @Override
+                    public void selectVersionFromRange(Artifact artifact) {
+                        log("selectVersionFromRange: " + string(artifact));
+                    }
+
+                    @Override
+                    public void restrictRange(Artifact artifact, Artifact replacement, VersionRange newRange) {
+                        log("restrictRange: " + string(artifact) + ", replacement=" + string(replacement)
+                                + ", versionRange=" + newRange);
+                    }
+                });
         return repositorySystem.resolve(request);
+    }
+
+    private static String string(Artifact a) {
+        return a.getGroupId() + ":" + a.getArtifactId() + ":" + a.getVersion() + ":" + a.getScope() + ":" + a.getType();
     }
 
     private void ensureDestinationDirectoryExists() {
