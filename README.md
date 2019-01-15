@@ -21,6 +21,7 @@ It is possible to use *exec-maven-plugin* to call `xjc` via the `java` goal or `
 
 * With `exec:java` you can call `XJCFacade.main` having setup the classpath with the `jaxb-xjc` dependency **but** `XJCFacade.main` calls `System.exit` so that after generating your classes the maven build is killed. Obviously terrible when you want stuff to happen after generating the classes!
 * With `exec:exec` you can call `XJCFacade.main` forked so that the `System.exit` doesn't kill the build **but** you have to build the classpath yourself (16 dependencies without maven to help you).
+* With both of the `exec` options you need to add a call to `antrun-maven-plugin` to create the destination directory if it doesn't exist.
 
 Instead of these poor options, use *xjc-maven-plugin*!
 
