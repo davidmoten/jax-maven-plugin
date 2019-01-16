@@ -175,7 +175,7 @@ public final class XjcMojo extends AbstractMojo {
                     int depth = 0;
 
                     private void log(String message) {
-                        log.info(spaces(depth) + message);
+                        log.debug(spaces(depth) + message);
                     }
 
                     @Override
