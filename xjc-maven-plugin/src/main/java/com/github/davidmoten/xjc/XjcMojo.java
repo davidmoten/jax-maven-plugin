@@ -17,15 +17,20 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ResolutionListener;
+import org.apache.maven.artifact.resolver.ResolutionNode;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
+import org.sonatype.plexus.build.incremental.BuildContext;
 import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 
@@ -34,11 +39,21 @@ import com.google.common.collect.Lists;
 @Mojo(name = "xjc")
 public final class XjcMojo extends AbstractMojo {
 
+    public static final String PLUGIN_DESCRIPTOR = "pluginDescriptor";
+
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
 
     @Parameter(name = "systemProperties")
     private Map<String, String> systemProperties;
+
+    @Component
+    private MavenProject mavenProject;
+
+    @Component
+    private BuildContext buildContext;
+
+    private File outputDir;
 
     @Component
     private RepositorySystem repositorySystem;
@@ -65,6 +80,9 @@ public final class XjcMojo extends AbstractMojo {
                     .redirectOutput(System.out) //
                     .redirectError(System.out) //
                     .execute();
+
+            buildContext.refresh(outputDir);
+            addGeneratedSourcesToProjectSourceRoot();
         } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
@@ -98,17 +116,17 @@ public final class XjcMojo extends AbstractMojo {
                 .stream() //
                 .map(x -> x.getArtifact().getFile().getAbsolutePath());
 
+        Stream<String> fullDependencyEntries = Stream.concat(dependencyEntries, getPluginRuntimeDependencyEntries());
+
         StringBuilder classpath = new StringBuilder();
         classpath.append( //
-                Stream.concat(artifactEntry, dependencyEntries) //
+                Stream.concat(artifactEntry, fullDependencyEntries) //
                         .collect(Collectors.joining(File.pathSeparator)));
-
         ////////////////////////////////////////////////////////
         //
         // now grab the classpath entry for xjc-maven-plugin-core
         //
         ////////////////////////////////////////////////////////
-
         final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
         for (final URL url : classLoader.getURLs()) {
@@ -143,6 +161,37 @@ public final class XjcMojo extends AbstractMojo {
         command.add(DriverMain.class.getName());
         command.addAll(arguments);
         return command;
+    }
+
+    private Stream<String> getPluginRuntimeDependencyEntries()
+    {
+        PluginDescriptor pluginDescriptor = (PluginDescriptor) getPluginContext().get(PLUGIN_DESCRIPTOR);
+        Plugin plugin = mavenProject.getBuild().getPluginsAsMap().get(pluginDescriptor.getPluginLookupKey());
+
+        List<ArtifactResolutionResult> artifactResolutionResults = plugin.getDependencies().stream()
+            .map(repositorySystem::createDependencyArtifact)
+            .map(this::resolve)
+            .collect(Collectors.toList());
+
+        Stream<Artifact> originalArtifacts = artifactResolutionResults.stream()
+            .map(ArtifactResolutionResult::getOriginatingArtifact);
+
+        Stream<Artifact> childArtifacts = artifactResolutionResults.stream()
+            .flatMap(resolutionResult -> resolutionResult.getArtifactResolutionNodes().stream())
+            .map(ResolutionNode::getArtifact);
+
+        return Stream.concat(originalArtifacts, childArtifacts)
+            .map(Artifact::getFile)
+            .map(File::getAbsolutePath);
+    }
+
+    private void addGeneratedSourcesToProjectSourceRoot() {
+        try {
+            mavenProject.addCompileSourceRoot(outputDir.getCanonicalPath());
+        }
+        catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private static String readJaxbVersion() {
@@ -246,10 +295,10 @@ public final class XjcMojo extends AbstractMojo {
     private void ensureDestinationDirectoryExists() {
         for (int i = 0; i < arguments.size(); i++) {
             if (arguments.get(i).trim().equals("-d") && i < arguments.size() - 1) {
-                File dir = new File(arguments.get(i + 1));
-                if (!dir.exists()) {
-                    getLog().info("destination directory (-d option) specified and does not exist, creating: " + dir);
-                    dir.mkdirs();
+                outputDir = new File(arguments.get(i + 1));
+                if (!outputDir.exists()) {
+                    getLog().info("destination directory (-d option) specified and does not exist, creating: " + outputDir);
+                    outputDir.mkdirs();
                 }
             }
         }
