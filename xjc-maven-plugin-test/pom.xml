@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.github.davidmoten</groupId>
         <artifactId>xjc-maven-plugin-parent</artifactId>
-        <version>0.1.3-SNAPSHOT</version>
+        <version>0.1.4-SNAPSHOT-1</version>
     </parent>
 
     <artifactId>xjc-maven-plugin-test</artifactId>
@@ -35,6 +35,11 @@
             <artifactId>jaxb-impl</artifactId>
             <version>${jaxb.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics</artifactId>
+            <version>1.11.1</version>
         </dependency>
         
         <!-- test -->
@@ -89,8 +94,28 @@
                     </execution>
                     <execution>
                         <id>gen-from-xsd-kml</id>
-                        <!-- generate sources from the java.util.logging 
-                            DTD -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <!--These are the arguments you would normally
+                                    have put with a call to xjc-->
+                                <argument>-verbose</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}-dontinclude</argument>
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/xsd</argument>
+                                <argument>-b</argument>
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/bindings</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gen-from-xsd-kml-episode-gen</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>xjc</goal>
@@ -105,13 +130,47 @@
                                 <argument>-verbose</argument>
                                 <argument>-d</argument>
                                 <argument>${jaxb.generated}-dontinclude</argument>
+                                <argument>-episode</argument>
+                                <argument>${project.build.directory}/kml.episode</argument>
                                 <argument>${project.basedir}/src/main/jaxb/kml-2-2/xsd</argument>
                                 <argument>-b</argument>
                                 <argument>${project.basedir}/src/main/jaxb/kml-2-2/bindings</argument>
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>from-dtd-usePlugins</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <argument>-extension</argument>
+                                <argument>-verbose</argument>
+                                <argument>-Xequals</argument>
+                                <argument>-XhashCode</argument>
+                                <argument>-XtoString</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}</argument>
+                                <argument>-p</argument>
+                                <argument>plugin.support</argument>
+                                <argument>-dtd</argument>
+                                <argument>${project.basedir}/src/main/dtd/logger.dtd</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-basics</artifactId>
+                        <version>1.11.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -139,6 +198,30 @@
                 <configuration>
                     <additionalJOption>-Xdoclint:none</additionalJOption>
                 </configuration>
+            </plugin>
+            <!-- Test purpose plugin - to allow .episode file appear in classpath-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                  <execution>
+                    <id>default-resources</id>
+                    <goals>
+                      <goal>resources</goal>
+                    </goals>
+                    <configuration>
+                      <resources>
+                        <resource>
+                          <directory>${project.build.directory}</directory>
+                          <includes>
+                            <include>*.episode</include>
+                          </includes>
+                        </resource>
+                      </resources>
+                    </configuration>
+                  </execution>
+                </executions>
             </plugin>
         </plugins>
 

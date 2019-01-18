@@ -12,6 +12,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
@@ -36,6 +37,9 @@ import org.zeroturnaround.exec.ProcessExecutor;
 
 import com.google.common.collect.Lists;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+
 @Mojo(name = "xjc")
 public final class XjcMojo extends AbstractMojo {
 
@@ -53,8 +57,6 @@ public final class XjcMojo extends AbstractMojo {
     @Component
     private BuildContext buildContext;
 
-    private File outputDir;
-
     @Component
     private RepositorySystem repositorySystem;
 
@@ -69,7 +71,7 @@ public final class XjcMojo extends AbstractMojo {
         Log log = getLog();
         log.info("Starting xjc mojo");
 
-        ensureDestinationDirectoryExists();
+        File outputDir = createOutputDirectoryIfSpecifiedOrDefault();
 
         List<String> command = createCommand();
 
@@ -82,7 +84,6 @@ public final class XjcMojo extends AbstractMojo {
                     .execute();
 
             buildContext.refresh(outputDir);
-            addGeneratedSourcesToProjectSourceRoot();
         } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
@@ -185,15 +186,6 @@ public final class XjcMojo extends AbstractMojo {
             .map(File::getAbsolutePath);
     }
 
-    private void addGeneratedSourcesToProjectSourceRoot() {
-        try {
-            mavenProject.addCompileSourceRoot(outputDir.getCanonicalPath());
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
     private static String readJaxbVersion() {
         Properties p = new Properties();
         try {
@@ -292,16 +284,26 @@ public final class XjcMojo extends AbstractMojo {
         return a.getGroupId() + ":" + a.getArtifactId() + ":" + a.getVersion() + ":" + a.getScope() + ":" + a.getType();
     }
 
-    private void ensureDestinationDirectoryExists() {
+    private File createOutputDirectoryIfSpecifiedOrDefault() {
         for (int i = 0; i < arguments.size(); i++) {
-            if (arguments.get(i).trim().equals("-d") && i < arguments.size() - 1) {
-                outputDir = new File(arguments.get(i + 1));
+            if (isDirParamSpecifiedAndNotEmpty(arguments, i)) {
+                File outputDir = new File(arguments.get(i + 1));
                 if (!outputDir.exists()) {
                     getLog().info("destination directory (-d option) specified and does not exist, creating: " + outputDir);
                     outputDir.mkdirs();
+                    return outputDir;
                 }
             }
         }
+
+        final File outputDir = new File(mavenProject.getBuild().getDirectory());
+        outputDir.mkdir();
+        return outputDir;
+    }
+
+    private boolean isDirParamSpecifiedAndNotEmpty(List<String> arguments, int index) {
+        final String argValue = defaultIfBlank(arguments.get(index), EMPTY).trim();
+        return StringUtils.equals(argValue, "-d") && index < arguments.size() - 1;
     }
 
 }
