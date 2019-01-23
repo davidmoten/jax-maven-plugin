@@ -4,7 +4,7 @@
 
 The `xjc` executable is not present in the JDK as of version 11. However, the functionality of `xjc` is still available (right down to the command line arguments to that original executable) via external artifacts like *org.glassfish.jaxb:jaxb-xjc*.
 
-*xjc-maven-plugin* sets up the classpath dependencies and passes the arguments you provide directly through to the `XJCFacade.main` method.
+*xjc-maven-plugin* sets up the classpath dependencies and passes the arguments you provide directly through to the `com.sun.tools.xjc.Driver.run` method.
 
 The development of this plugin was motivated by [problems](https://github.com/mojohaus/jaxb2-maven-plugin/issues/43) with the *jaxb2-maven-plugin* with Java 9+. My company's codebase used *jaxb2-maven-plugin* in ~10 locations (always the `xjc` goal) and we wanted to move to OpenJDK 11+ given the EOL (unpaid) for Oracle Java 8 in January 2019.
 
@@ -14,10 +14,11 @@ Status: *deployed to Maven Central*
 * Supports Java 8, 9, 10, 11+, generates code from DTD or XSD
 * detects the `-d` destination directoy and auto-creates directory if does not exist
 * sets system properties
+* supports JAXB extensions
 * [unit tested](xjc-maven-plugin-test) on Oracle JDK 8, 9, 10, 11 and OpenJDK 10, 11 (using Travis)
 
 ## What about exec-maven-plugin?
-It is possible to use *exec-maven-plugin* to call `xjc` via the `java` goal or `exec` goal to call `XJCFacade.main`. There are problems though:
+It is possible to use *exec-maven-plugin* to call `xjc` via the `java` goal or `exec` goal to call `XJCFacade.main` (which calls `com.sun.tools.xjc.Driver.run`). There are problems though:
 
 * With `exec:java` you can call `XJCFacade.main` having setup the classpath with the `jaxb-xjc` dependency **but** `XJCFacade.main` calls `System.exit` so that after generating your classes the maven build is killed. Obviously terrible when you want stuff to happen after generating the classes!
 * With `exec:exec` you can call `XJCFacade.main` forked so that the `System.exit` doesn't kill the build **but** you have to build the classpath yourself (16 dependencies without maven to help you).
@@ -139,6 +140,31 @@ mvn clean install -X
 
 ## Arguments
 See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
+
+## Using JAXB extensions
+If you add dependencies to the classpath used by `xjc` and include the `-extension` flag then you can customise the generated code. To add dependencies to the classpath of `xjc` use the `<dependencies>` element as below (let's add the [*jaxb-basics*](https://github.com/highsource/jaxb2-basics/wiki/Using-JAXB2-Basics-Plugins) dependency):
+
+```xml
+<plugin>
+	<groupId>com.github.davidmoten</groupId>
+	<artifactId>xjc-maven-plugin</artifactId>
+	<version>${project.parent.version}</version>
+	<dependencies>
+		<dependency>
+		    <groupId>org.jvnet.jaxb2_commons</groupId>
+		    <artifactId>jaxb2-basics</artifactId>
+		    <version>1.11.1</version>
+		</dependency>
+	</dependencies>
+	<executions>
+    ...
+    </executions>
+</plugin>
+```
+
+A fully worked example that generates `hashCode`, `equals` and `toString` methods in generated classes is in [xjc-maven-plugin-tests](xjc-maven-plugin-tests/pom.xml).
+
+A big thank you to @Glebcher601 for contributing extension support!
 
 ## Update the JAXB version used
 For project maintainers, to use a new version of *jaxb-xjc* just update the `glassfish.jaxb.version` in the root pom.xml.
