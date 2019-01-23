@@ -91,7 +91,6 @@
                             <arguments>
                                 <!-- These are the arguments you would normally 
                                     have put with a call to xjc -->
-                                <argument>-extension</argument>
                                 <argument>-verbose</argument>
                                 <argument>-d</argument>
                                 <argument>${jaxb.generated}</argument>
