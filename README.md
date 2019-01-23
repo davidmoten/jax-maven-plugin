@@ -162,7 +162,7 @@ If you add dependencies to the classpath used by `xjc` and include the `-extensi
 </plugin>
 ```
 
-A fully worked example that generates `hashCode`, `equals` and `toString` methods in generated classes is in [xjc-maven-plugin-tests](xjc-maven-plugin-tests/pom.xml).
+A fully worked example that generates `hashCode`, `equals` and `toString` methods in generated classes is in [xjc-maven-plugin-tests](xjc-maven-plugin-test/pom.xml).
 
 A big thank you to @Glebcher601 for contributing extension support!
 
