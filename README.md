@@ -142,7 +142,7 @@ mvn clean install -X
 See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
 
 ## Using JAXB extensions
-If you add dependencies to the classpath used by `xjc` and include the `-extension` flag then you can customise the generated code. To add dependencies to the classpath of `xjc` use the `<dependencies>` element as below (let's add the [*jaxb-basics*](https://github.com/highsource/jaxb2-basics/wiki/Using-JAXB2-Basics-Plugins) dependency):
+If you add dependencies to the classpath used by `xjc` and include the `-extension` flag then you can customise the generated code. To add dependencies to the classpath of `xjc` use the `<dependencies>` element as below (let's add the [*jaxb2-basics*](https://github.com/highsource/jaxb2-basics/wiki/Using-JAXB2-Basics-Plugins) dependency):
 
 ```xml
 <plugin>
