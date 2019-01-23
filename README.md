@@ -146,17 +146,17 @@ If you add dependencies to the classpath used by `xjc` and include the `-extensi
 
 ```xml
 <plugin>
-	<groupId>com.github.davidmoten</groupId>
-	<artifactId>xjc-maven-plugin</artifactId>
-	<version>${project.parent.version}</version>
-	<dependencies>
-		<dependency>
-		    <groupId>org.jvnet.jaxb2_commons</groupId>
-		    <artifactId>jaxb2-basics</artifactId>
-		    <version>1.11.1</version>
-		</dependency>
-	</dependencies>
-	<executions>
+    <groupId>com.github.davidmoten</groupId>
+    <artifactId>xjc-maven-plugin</artifactId>
+    <version>${project.parent.version}</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics</artifactId>
+            <version>1.11.1</version>
+        </dependency>
+    </dependencies>
+    <executions>
     ...
     </executions>
 </plugin>
