@@ -296,9 +296,7 @@ public final class XjcMojo extends AbstractMojo {
             }
         }
 
-        final File outputDir = new File(".");
-        outputDir.mkdir();
-        return outputDir;
+        return new File(".");
     }
 
     private boolean isDirParamSpecifiedAndNotEmpty(List<String> arguments, int index) {
