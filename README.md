@@ -141,6 +141,8 @@ mvn clean install -X
 ## Arguments
 See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
 
+Note that if you don't specify the `-d` destination directory then generated source will be placed in the root of the project directory. In short, always specify the `-d` parameter.
+
 ## Using JAXB extensions
 If you add dependencies to the classpath used by `xjc` and include the `-extension` flag then you can customise the generated code. To add dependencies to the classpath of `xjc` use the `<dependencies>` element as below (let's add the [*jaxb2-basics*](https://github.com/highsource/jaxb2-basics/wiki/Using-JAXB2-Basics-Plugins) dependency):
 

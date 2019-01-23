@@ -295,7 +295,7 @@ public final class XjcMojo extends AbstractMojo {
                 }
             }
         }
-
+        getLog().warn("destination directory (-d option) NOT specified. Generated source will be placed in project root.");
         return new File(".");
     }
 
