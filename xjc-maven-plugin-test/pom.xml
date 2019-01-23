@@ -13,6 +13,7 @@
         <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
         <jaxb.version>2.3.0</jaxb.version>
         <javadoc.version>3.0.1</javadoc.version>
+        <jaxb2.basics.version>1.11.1</jaxb2.basics.version>
     </properties>
 
     <dependencies>
@@ -36,10 +37,12 @@
             <version>${jaxb.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!--  required to support plugin execution `from-dtd-usePlugins` -->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics</artifactId>
-            <version>1.11.1</version>
+            <version>${jaxb2.basics.version}</version>
         </dependency>
         
         <!-- test -->
@@ -69,7 +72,7 @@
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-basics</artifactId>
-                        <version>1.11.1</version>
+                        <version>${jaxb2.basics.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>
