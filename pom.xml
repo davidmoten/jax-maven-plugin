@@ -23,6 +23,7 @@
         <!-- note that if you change the jaxb version you need to change 
             the hard-coded version in XjcMojo.java as well -->
         <glassfish.jaxb.version>2.4.0-b180830.0438</glassfish.jaxb.version>
+        <scm.url>scm:git:https://github.com/davidmoten/xjc-maven-plugin.git</scm.url>
     </properties>
 
     <licenses>
@@ -59,9 +60,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/davidmoten/xjc-maven-plugin.git</connection>
-        <developerConnection>scm:git:https://github.com/davidmoten/xjc-maven-plugin.git</developerConnection>
-        <url>scm:git:https://github.com:davidmoten/xjc-maven-plugin.git</url>
+        <connection>${scm.url}</connection>
+        <developerConnection>${scm.url}</developerConnection>
+        <url>${scm.url}</url>
         <tag>0.1.1</tag>
     </scm>
 
