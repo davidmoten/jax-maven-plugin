@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.github.davidmoten</groupId>
         <artifactId>xjc-maven-plugin-parent</artifactId>
-        <version>0.1.3</version>
+        <version>0.1.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>xjc-maven-plugin-core</artifactId>
