@@ -296,7 +296,7 @@ public final class XjcMojo extends AbstractMojo {
             }
         }
 
-        final File outputDir = new File(mavenProject.getBuild().getDirectory());
+        final File outputDir = new File(".");
         outputDir.mkdir();
         return outputDir;
     }
