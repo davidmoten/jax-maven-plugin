@@ -86,6 +86,7 @@
                             <goal>wsgen</goal>
                         </goals>
                         <configuration>
+                            <classpathScope>compile</classpathScope>
                             <arguments>
                                 <!-- These are the arguments you would normally 
                                     have put with a call to wsimport -->
