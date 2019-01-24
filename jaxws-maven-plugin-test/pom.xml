@@ -156,7 +156,6 @@
                                             [0.1.4-SNAPSHOT,)
                                         </versionRange>
                                         <goals>
-                                            <goal>xjc</goal>
                                             <goal>wsimport</goal>
                                             <goal>wsgen</goal>
                                         </goals>

@@ -15,8 +15,13 @@ public class JaxwsMavenPluginTest {
     }
     
     @Test
-    public void testGeneratedSourcesOnClasspath() throws ClassNotFoundException {
+    public void testWsImportGeneratedSourcesOnClasspath() throws ClassNotFoundException {
         Class.forName("com.examples.wsdl.helloservice.HelloService");
+    }
+    
+    @Test
+    public void testWsGenGeneratedSourcesOnClasspath() throws ClassNotFoundException {
+        Class.forName("com.github.davidmoten.jaxws.jaxws.GetIpAddress");
     }
 
 }
