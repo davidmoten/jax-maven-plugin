@@ -6,26 +6,21 @@ import com.github.davidmoten.guavamini.Sets;
 
 enum JaxCommand {
 
-    WSGEN(WsGenMain.class, "jaxws-maven-plugin-core", Sets.newHashSet("-r", "-d", "-s")), //
-    WSIMPORT(WsImportMain.class, "jaxws-maven-plugin-core", Sets.newHashSet("-d", "-s")), //
-    XJC(XjcMain.class, "jaxws-maven-plugin-core", Sets.newHashSet("-d"));
+    WSGEN(WsGenMain.class, Sets.newHashSet("-r", "-d", "-s")), //
+    WSIMPORT(WsImportMain.class, Sets.newHashSet("-d", "-s")), //
+    XJC(XjcMain.class, Sets.newHashSet("-d")), //
+    SCHEMAGEN(XjcMain.class, Sets.newHashSet("-d"));
 
     private final Class<?> mainClass;
-    private final String artifactId;
     private final Set<String> directoryParameters;
 
-    private JaxCommand(Class<?> mainClass, String artifactId, Set<String> directoryParameters) {
+    private JaxCommand(Class<?> mainClass, Set<String> directoryParameters) {
         this.mainClass = mainClass;
-        this.artifactId = artifactId;
         this.directoryParameters = directoryParameters;
     }
 
     public Class<?> mainClass() {
         return mainClass;
-    }
-
-    public String mainClassArtifactId() {
-        return artifactId;
     }
 
     public Set<String> getDirectoryParameters() {
