@@ -70,5 +70,7 @@
         <module>xjc-maven-plugin-core</module>
         <module>xjc-maven-plugin</module>
         <module>xjc-maven-plugin-test</module>
+        <module>jaxws-maven-plugin-core</module>
+        <module>jaxws-maven-plugin</module>
     </modules>
 </project>

@@ -1,4 +1,4 @@
-package com.github.davidmoten.xjc;
+package com.github.davidmoten.jaxws;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
@@ -76,7 +76,8 @@ public final class WsImportMojo extends AbstractMojo {
         Log log = getLog();
         log.info("Starting " + NAME + " mojo");
 
-        File outputDir = createOutputDirectoryIfSpecifiedOrDefault();
+        File generatedClassesDir = createOutputDirectoryIfSpecifiedOrDefault("-d");
+        File generatedSourceDir = createOutputDirectoryIfSpecifiedOrDefault("-s");
 
         List<String> command = createCommand();
 
@@ -88,7 +89,8 @@ public final class WsImportMojo extends AbstractMojo {
                     .redirectError(System.out) //
                     .execute();
 
-            buildContext.refresh(outputDir);
+            buildContext.refresh(generatedClassesDir);
+            buildContext.refresh(generatedSourceDir);
         } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
@@ -111,7 +113,7 @@ public final class WsImportMojo extends AbstractMojo {
 
         Artifact artifact = repositorySystem.createArtifact( //
                 "com.sun.xml.ws", "jaxws-tools", jaxwsVersion, "", "jar");
-        
+
         WsImport.class.getName();
 
         log.info("setting up classpath for jaxb-xjc version " + jaxwsVersion);
@@ -130,7 +132,7 @@ public final class WsImportMojo extends AbstractMojo {
         classpath.append( //
                 Stream.concat(artifactEntry, fullDependencyEntries) //
                         .collect(Collectors.joining(File.pathSeparator)));
-        
+
         ////////////////////////////////////////////////////////
         //
         // now grab the classpath entry for *-maven-plugin-core
@@ -287,26 +289,26 @@ public final class WsImportMojo extends AbstractMojo {
         return a.getGroupId() + ":" + a.getArtifactId() + ":" + a.getVersion() + ":" + a.getScope() + ":" + a.getType();
     }
 
-    private File createOutputDirectoryIfSpecifiedOrDefault() {
+    private File createOutputDirectoryIfSpecifiedOrDefault(String param) {
         for (int i = 0; i < arguments.size(); i++) {
-            if (isDirParamSpecifiedAndNotEmpty(arguments, i)) {
+            if (isOptionParamSpecifiedAndNotEmpty(arguments, i, param)) {
                 File outputDir = new File(arguments.get(i + 1));
                 if (!outputDir.exists()) {
-                    getLog().info(
-                            "destination directory (-d option) specified and does not exist, creating: " + outputDir);
+                    getLog().info("destination directory (" + param
+                            + " option) specified and does not exist, creating: " + outputDir);
                     outputDir.mkdirs();
                     return outputDir;
                 }
             }
         }
-        getLog().warn(
-                "destination directory (-d option) NOT specified. Generated source will be placed in project root.");
+        getLog().warn("destination directory (" + param
+                + " option) NOT specified. Generated source will be placed in project root.");
         return new File(".");
     }
 
-    private boolean isDirParamSpecifiedAndNotEmpty(List<String> arguments, int index) {
+    private boolean isOptionParamSpecifiedAndNotEmpty(List<String> arguments, int index, String param) {
         final String argValue = defaultIfBlank(arguments.get(index), EMPTY).trim();
-        return StringUtils.equals(argValue, "-d") && index < arguments.size() - 1;
+        return StringUtils.equals(argValue, param) && index < arguments.size() - 1;
     }
 
 }
