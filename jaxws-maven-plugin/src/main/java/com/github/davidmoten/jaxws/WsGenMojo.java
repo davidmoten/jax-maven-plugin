@@ -63,10 +63,11 @@ public final class WsGenMojo extends AbstractMojo {
         Log log = getLog();
         log.info("Starting " + cmd + " mojo");
 
-        File generatedClassesDir = Util.createOutputDirectoryIfSpecifiedOrDefault(log, "-d", arguments);
-        File generatedSourceDir = Util.createOutputDirectoryIfSpecifiedOrDefault(log, "-s", arguments);
-        File generatedResourcesDir = Util.createOutputDirectoryIfSpecifiedOrDefault(log, "-r", arguments);
-
+        List<File> outputDirectories = cmd. //
+                getDirectoryParameters() //
+                .stream() //
+                .map(param -> Util.createOutputDirectoryIfSpecifiedOrDefault(log, param, arguments))
+                .collect(Collectors.toList());
         try {
             List<String> command = createCommand(log, repositorySystem, localRepository, remoteRepositories, cmd);
 
@@ -77,9 +78,8 @@ public final class WsGenMojo extends AbstractMojo {
                     .redirectError(System.out) //
                     .execute();
 
-            buildContext.refresh(generatedClassesDir);
-            buildContext.refresh(generatedSourceDir);
-            buildContext.refresh(generatedResourcesDir);
+            outputDirectories.forEach(buildContext::refresh);
+
         } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException
                 | DependencyResolutionRequiredException e) {
             throw new MojoExecutionException(e.getMessage(), e);
@@ -92,18 +92,19 @@ public final class WsGenMojo extends AbstractMojo {
 
         // https://stackoverflow.com/questions/1440224/how-can-i-download-maven-artifacts-within-a-plugin
 
-        String jaxwsVersion = readJaxwsVersion();
+        String mainArtifactVersion = Util.readConfigurationValue("project.parent.version");
+        String mainArtifactGroupId = Util.readConfigurationValue("project.parent.groupId");
 
-        ////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
         //
-        // get the classpath entries for the deps of jaxb-xjc
+        // get the classpath entries for the deps of the main class called
         //
-        ////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////
 
         Artifact artifact = repositorySystem.createArtifact( //
-                "com.sun.xml.ws", "jaxws-tools", jaxwsVersion, "", "jar");
+                mainArtifactGroupId, cmd.mainClassArtifactId(), mainArtifactVersion, "", "jar");
 
-        log.info("setting up classpath for jaxws-tools version " + jaxwsVersion);
+        log.info("setting up classpath for jaxws-tools version " + mainArtifactVersion);
 
         ArtifactResolutionResult r = Util.resolve(log, artifact, repositorySystem, localRepository, remoteRepositories);
 
@@ -113,10 +114,12 @@ public final class WsGenMojo extends AbstractMojo {
                 .stream() //
                 .map(x -> x.getArtifact().getFile().getAbsolutePath());
 
+        Stream<String> pluginDependencyEntries = Util.getPluginRuntimeDependencyEntries(this, project, log,
+                repositorySystem, localRepository, remoteRepositories);
+
         Stream<String> fullDependencyEntries = Stream.concat(//
                 dependencyEntries, //
-                Util.getPluginRuntimeDependencyEntries(this, project, log, repositorySystem, localRepository,
-                        remoteRepositories));
+                pluginDependencyEntries);
 
         StringBuilder classpath = new StringBuilder();
         classpath.append( //
@@ -186,10 +189,6 @@ public final class WsGenMojo extends AbstractMojo {
         log.info("arguments passed to " + cmd.mainClass().getName() + ":\n  "
                 + command.stream().collect(Collectors.joining("\n  ")) + "\n");
         return command;
-    }
-
-    private static String readJaxwsVersion() {
-        return Util.readConfigurationValue("com.sun.xml.ws.version");
     }
 
 }

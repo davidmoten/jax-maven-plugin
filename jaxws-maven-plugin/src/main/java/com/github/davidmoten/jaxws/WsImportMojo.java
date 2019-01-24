@@ -101,7 +101,7 @@ public final class WsImportMojo extends AbstractMojo {
 
         Log log = getLog();
 
-        String jaxwsVersion = readJaxwsVersion();
+        String mainArtifactVersion = Util.readConfigurationValue("project.parent.version");
 
         ////////////////////////////////////////////////////////
         //
@@ -110,9 +110,9 @@ public final class WsImportMojo extends AbstractMojo {
         ////////////////////////////////////////////////////////
 
         Artifact artifact = repositorySystem.createArtifact( //
-                "com.sun.xml.ws", "jaxws-tools", jaxwsVersion, "", "jar");
+                "com.github.davidmoten", "jaxws-maven-plugin-core", mainArtifactVersion, "", "jar");
 
-        log.info("setting up classpath for jaxb-xjc version " + jaxwsVersion);
+        log.info("setting up classpath for wsimport, version " + mainArtifactVersion);
 
         ArtifactResolutionResult r = resolve(artifact);
 
@@ -186,16 +186,6 @@ public final class WsImportMojo extends AbstractMojo {
                 .map(ResolutionNode::getArtifact);
 
         return Stream.concat(originalArtifacts, childArtifacts).map(Artifact::getFile).map(File::getAbsolutePath);
-    }
-
-    private static String readJaxwsVersion() {
-        Properties p = new Properties();
-        try {
-            p.load(WsImportMojo.class.getResourceAsStream("/configuration.properties"));
-            return p.getProperty("com.sun.xml.ws.version");
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 
     private static String spaces(int n) {
