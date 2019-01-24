@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
@@ -55,7 +56,7 @@ public final class WsGenMojo extends AbstractMojo {
     private Map<String, String> systemProperties;
 
     @Component
-    private MavenProject mavenProject;
+    private MavenProject project;
 
     @Component
     private BuildContext buildContext;
@@ -69,6 +70,9 @@ public final class WsGenMojo extends AbstractMojo {
     @Parameter(defaultValue = "${remoteArtifactRepositories}", readonly = true, required = true)
     private List<ArtifactRepository> remoteRepositories;
 
+    @Parameter(name = "classpathScope", defaultValue = "compile")
+    private String classpathScope;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
@@ -78,9 +82,9 @@ public final class WsGenMojo extends AbstractMojo {
         File generatedSourceDir = createOutputDirectoryIfSpecifiedOrDefault("-s");
         File generatedResourcesDir = createOutputDirectoryIfSpecifiedOrDefault("-r");
 
-        List<String> command = createCommand();
-
         try {
+            List<String> command = createCommand();
+
             new ProcessExecutor() //
                     .command(command) //
                     .exitValueNormal() //
@@ -91,13 +95,14 @@ public final class WsGenMojo extends AbstractMojo {
             buildContext.refresh(generatedClassesDir);
             buildContext.refresh(generatedSourceDir);
             buildContext.refresh(generatedResourcesDir);
-        } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
+        } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException
+                | DependencyResolutionRequiredException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
         log.info(NAME + " mojo finished");
     }
 
-    private List<String> createCommand() {
+    private List<String> createCommand() throws DependencyResolutionRequiredException {
 
         // https://stackoverflow.com/questions/1440224/how-can-i-download-maven-artifacts-within-a-plugin
 
@@ -169,13 +174,29 @@ public final class WsGenMojo extends AbstractMojo {
                     .collect(Collectors.toList()));
         }
         command.add(MAIN_CLASS.getName());
+
+        // if -cp or -classpath parameter not set in arguments then use classpathScope
+        if (!arguments.stream().filter(x -> "-cp".equals(x.trim()) || "-classpath".equals(x.trim())).findFirst()
+                .isPresent()) {
+            List<String> cp;
+            if ("compile".equals(classpathScope)) {
+                cp = project.getCompileClasspathElements();
+            } else if ("runtime".equals(classpathScope)) {
+                cp = project.getRuntimeClasspathElements();
+            } else if ("test".equals(classpathScope)) {
+                cp = project.getTestClasspathElements();
+            } else {
+                throw new IllegalArgumentException("classpathScope " + classpathScope + " not recognized");
+            }
+            command.add(cp.stream().collect(Collectors.joining(File.pathSeparator)));
+        }
         command.addAll(arguments);
         return command;
     }
 
     private Stream<String> getPluginRuntimeDependencyEntries() {
         PluginDescriptor pluginDescriptor = (PluginDescriptor) getPluginContext().get(PLUGIN_DESCRIPTOR);
-        Plugin plugin = mavenProject.getBuild().getPluginsAsMap().get(pluginDescriptor.getPluginLookupKey());
+        Plugin plugin = project.getBuild().getPluginsAsMap().get(pluginDescriptor.getPluginLookupKey());
 
         List<ArtifactResolutionResult> artifactResolutionResults = plugin.getDependencies().stream()
                 .map(repositorySystem::createDependencyArtifact).map(this::resolve).collect(Collectors.toList());
