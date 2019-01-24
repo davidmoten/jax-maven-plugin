@@ -69,7 +69,7 @@ public final class WsGenMojo extends AbstractMojo {
                 .map(param -> Util.createOutputDirectoryIfSpecifiedOrDefault(log, param, arguments))
                 .collect(Collectors.toList());
         try {
-            List<String> command = createCommand(log, repositorySystem, localRepository, remoteRepositories, cmd);
+            List<String> command = createCommand(log, repositorySystem, localRepository, remoteRepositories, cmd, systemProperties, arguments, project, classpathScope, this);
 
             new ProcessExecutor() //
                     .command(command) //
@@ -87,8 +87,10 @@ public final class WsGenMojo extends AbstractMojo {
         log.info(cmd + " mojo finished");
     }
 
-    private List<String> createCommand(Log log, RepositorySystem repositorySystem, ArtifactRepository localRepository,
-            List<ArtifactRepository> remoteRepositories, JaxCommand cmd) throws DependencyResolutionRequiredException {
+    private static List<String> createCommand(Log log, RepositorySystem repositorySystem,
+            ArtifactRepository localRepository, List<ArtifactRepository> remoteRepositories, JaxCommand cmd,
+            Map<String, String> systemProperties, List<String> arguments, MavenProject project, String classpathScope, AbstractMojo mojo)
+            throws DependencyResolutionRequiredException {
 
         // https://stackoverflow.com/questions/1440224/how-can-i-download-maven-artifacts-within-a-plugin
 
@@ -114,7 +116,7 @@ public final class WsGenMojo extends AbstractMojo {
                 .stream() //
                 .map(x -> x.getArtifact().getFile().getAbsolutePath());
 
-        Stream<String> pluginDependencyEntries = Util.getPluginRuntimeDependencyEntries(this, project, log,
+        Stream<String> pluginDependencyEntries = Util.getPluginRuntimeDependencyEntries(mojo, project, log,
                 repositorySystem, localRepository, remoteRepositories);
 
         Stream<String> fullDependencyEntries = Stream.concat(//
