@@ -1,4 +1,4 @@
-package com.github.davidmoten.xjc;
+package com.github.davidmoten.wsimport;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,7 +17,6 @@ public class WsImportTest {
         assertTrue(wsdl.exists());
         String[] args = new String[] {
           "-verbose", //
-          "-extension", //
           "-keep", //
           "-d", "target", //
           "-s", "target", //

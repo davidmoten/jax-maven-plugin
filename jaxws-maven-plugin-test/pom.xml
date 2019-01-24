@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.davidmoten</groupId>
+        <artifactId>xjc-maven-plugin-parent</artifactId>
+        <version>0.1.4-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jaxws-maven-plugin-test</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <jaxws.generated.sources>${project.build.directory}/generated-sources/jaxws</jaxws.generated.sources>
+        <jaxws.generated.classes>${project.build.directory}/generated-classes/jaxws</jaxws.generated.classes>
+        <javadoc.version>3.0.1</javadoc.version>
+        <jaxb2.basics.version>1.11.1</jaxb2.basics.version>
+    </properties>
+
+    <dependencies>
+        <!-- Java 11 needs these so the generated classes will compile -->
+        <!-- Java 8, 9, 10 don't seem to be bothered by the existence of 
+            these deps -->
+
+        <!-- test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.target}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.davidmoten</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>${project.parent.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-basics</artifactId>
+                        <version>${jaxb2.basics.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>gen-from-wsdl</id>
+                        <!-- generate sources from the java.util.logging 
+                            DTD -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <!-- These are the arguments you would normally 
+                                    have put with a call to wsimport -->
+                                <argument>-verbose</argument>
+                                <argument>-keep</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxws.generated.classes}</argument>
+                                <argument>-s</argument>
+                                <argument>${jaxws.generated.sources}</argument>
+                                <argument>${project.basedir}/src/main/wsdl/hello-service.wsdl</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${jaxws.generated.sources}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.version}</version>
+                <configuration>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <!-- FOR ECLIPSE ONLY, DISABLES A WARNING -->
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse 
+                    m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.github.davidmoten
+                                        </groupId>
+                                        <artifactId>
+                                            jaxws-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [0.1.4-SNAPSHOT,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>xjc</goal>
+                                            <goal>wsimport</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

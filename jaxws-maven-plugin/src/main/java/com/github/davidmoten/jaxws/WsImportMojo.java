@@ -40,7 +40,6 @@ import org.zeroturnaround.exec.ProcessExecutor;
 
 import com.github.davidmoten.wsimport.WsImportMain;
 import com.google.common.collect.Lists;
-import com.sun.tools.ws.ant.WsImport;
 
 @Mojo(name = "wsimport")
 public final class WsImportMojo extends AbstractMojo {
@@ -114,8 +113,6 @@ public final class WsImportMojo extends AbstractMojo {
         Artifact artifact = repositorySystem.createArtifact( //
                 "com.sun.xml.ws", "jaxws-tools", jaxwsVersion, "", "jar");
 
-        WsImport.class.getName();
-
         log.info("setting up classpath for jaxb-xjc version " + jaxwsVersion);
 
         ArtifactResolutionResult r = resolve(artifact);
@@ -146,7 +143,8 @@ public final class WsImportMojo extends AbstractMojo {
             // Note the contains check on xjc-maven-plugin-core because Travis runs mvn test
             // -B which gives us a classpath entry of xjc-maven-plugin-core/target/classes
             // (not a jar)
-            if (file.getAbsolutePath().contains("maven-plugin-core")) {
+            if (file.getAbsolutePath().contains("xjc-maven-plugin-core")
+                    || file.getAbsolutePath().contains("jaxws-maven-plugin-core")) {
                 if (classpath.length() > 0) {
                     classpath.append(File.pathSeparator);
                 }
