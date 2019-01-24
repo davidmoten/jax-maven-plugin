@@ -1,13 +1,14 @@
 package com.github.davidmoten.xjc;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
+
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 
 import dummy.ObjectFactory;
 import dummy.Param;
 import dummy.Record;
-
-import java.lang.reflect.Method;
 
 public class XjcPluginTest {
     
@@ -20,15 +21,15 @@ public class XjcPluginTest {
 
     @Test
     public void testJaxb2PluginGeneratedCodePresent() {
-        Assert.assertNotNull(getDeclaredMethod(plugin.support.Param.class, "toString"));
-        Assert.assertNotNull(getDeclaredMethod(plugin.support.Param.class, "equals"));
-        Assert.assertNotNull(getDeclaredMethod(plugin.support.Param.class, "hashCode"));
+        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "toString"));
+        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "equals"));
+        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "hashCode"));
         System.out.println("Jaxb2-basics plugins worked correctly");
     }
 
     @Test
     public void testKmlEpisodeFileGenerated() {
-        Assert.assertNotNull(XjcPluginTest.class.getClassLoader().getResourceAsStream("kml.episode"));
+        assertNotNull(XjcPluginTest.class.getClassLoader().getResourceAsStream("kml.episode"));
         System.out.println("episode file generated correctly");
     }
 
