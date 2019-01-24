@@ -38,6 +38,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 
+import com.github.davidmoten.wsimport.WsImportMain;
 import com.google.common.collect.Lists;
 import com.sun.tools.ws.ant.WsImport;
 
@@ -47,7 +48,7 @@ public final class WsImportMojo extends AbstractMojo {
     public static final String PLUGIN_DESCRIPTOR = "pluginDescriptor";
 
     private static final String NAME = "wsimport";
-    private static final Class<?> MAIN_CLASS = DriverMain.class;
+    private static final Class<?> MAIN_CLASS = WsImportMain.class;
 
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
