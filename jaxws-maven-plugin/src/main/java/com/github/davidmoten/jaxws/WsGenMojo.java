@@ -32,7 +32,7 @@ import com.google.common.collect.Lists;
 @Mojo(name = "wsgen")
 public final class WsGenMojo extends AbstractMojo {
 
-    private static final JaxwsCommand cmd = JaxwsCommand.WSGEN;
+    private static final JaxCommand cmd = JaxCommand.WSGEN;
 
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
@@ -88,7 +88,7 @@ public final class WsGenMojo extends AbstractMojo {
     }
 
     private List<String> createCommand(Log log, RepositorySystem repositorySystem, ArtifactRepository localRepository,
-            List<ArtifactRepository> remoteRepositories, JaxwsCommand cmd) throws DependencyResolutionRequiredException {
+            List<ArtifactRepository> remoteRepositories, JaxCommand cmd) throws DependencyResolutionRequiredException {
 
         // https://stackoverflow.com/questions/1440224/how-can-i-download-maven-artifacts-within-a-plugin
 
@@ -113,8 +113,10 @@ public final class WsGenMojo extends AbstractMojo {
                 .stream() //
                 .map(x -> x.getArtifact().getFile().getAbsolutePath());
 
-        Stream<String> fullDependencyEntries = Stream.concat(dependencyEntries, Util.getPluginRuntimeDependencyEntries(this,
-                project, log, repositorySystem, localRepository, remoteRepositories));
+        Stream<String> fullDependencyEntries = Stream.concat(//
+                dependencyEntries, //
+                Util.getPluginRuntimeDependencyEntries(this, project, log, repositorySystem, localRepository,
+                        remoteRepositories));
 
         StringBuilder classpath = new StringBuilder();
         classpath.append( //
@@ -161,24 +163,28 @@ public final class WsGenMojo extends AbstractMojo {
         command.add(cmd.mainClass().getName());
 
         // if -cp or -classpath parameter not set in arguments then use classpathScope
-        if (!arguments //
-                .stream() //
-                .filter(x -> "-cp".equals(x.trim()) || "-classpath".equals(x.trim())) //
-                .findFirst() //
-                .isPresent()) {
-            List<String> cp;
-            if ("compile".equals(classpathScope)) {
-                cp = project.getCompileClasspathElements();
-            } else if ("runtime".equals(classpathScope)) {
-                cp = project.getRuntimeClasspathElements();
-            } else if ("test".equals(classpathScope)) {
-                cp = project.getTestClasspathElements();
-            } else {
-                throw new IllegalArgumentException("classpathScope " + classpathScope + " not recognized");
+        if (cmd == JaxCommand.WSGEN) {
+            if (!arguments //
+                    .stream() //
+                    .filter(x -> "-cp".equals(x.trim()) || "-classpath".equals(x.trim())) //
+                    .findFirst() //
+                    .isPresent()) {
+                List<String> cp;
+                if ("compile".equals(classpathScope)) {
+                    cp = project.getCompileClasspathElements();
+                } else if ("runtime".equals(classpathScope)) {
+                    cp = project.getRuntimeClasspathElements();
+                } else if ("test".equals(classpathScope)) {
+                    cp = project.getTestClasspathElements();
+                } else {
+                    throw new IllegalArgumentException("classpathScope " + classpathScope + " not recognized");
+                }
+                command.add(cp.stream().collect(Collectors.joining(File.pathSeparator)));
             }
-            command.add(cp.stream().collect(Collectors.joining(File.pathSeparator)));
         }
         command.addAll(arguments);
+        log.info("arguments passed to " + cmd.mainClass().getName() + ":\n  "
+                + command.stream().collect(Collectors.joining("\n  ")) + "\n");
         return command;
     }
 

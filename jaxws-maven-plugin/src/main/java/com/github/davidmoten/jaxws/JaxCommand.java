@@ -1,12 +1,12 @@
 package com.github.davidmoten.jaxws;
 
-public enum JaxwsCommand {
+public enum JaxCommand {
 
     WSGEN(WsGenMain.class), WSIMPORT(WsImportMain.class);
 
     private Class<?> mainClass;
 
-    private JaxwsCommand(Class<?> mainClass) {
+    private JaxCommand(Class<?> mainClass) {
         this.mainClass = mainClass;
     }
 
