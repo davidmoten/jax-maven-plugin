@@ -40,13 +40,13 @@ import org.zeroturnaround.exec.ProcessExecutor;
 
 import com.google.common.collect.Lists;
 
-@Mojo(name = "wsimport")
-public final class WsImportMojo extends AbstractMojo {
+@Mojo(name = "wsgen")
+public final class WsGenMojo extends AbstractMojo {
 
     public static final String PLUGIN_DESCRIPTOR = "pluginDescriptor";
 
-    private static final String NAME = "wsimport";
-    private static final Class<?> MAIN_CLASS = WsImportMain.class;
+    private static final String NAME = "wsgen";
+    private static final Class<?> MAIN_CLASS = WsGenMain.class;
 
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
@@ -76,6 +76,7 @@ public final class WsImportMojo extends AbstractMojo {
 
         File generatedClassesDir = createOutputDirectoryIfSpecifiedOrDefault("-d");
         File generatedSourceDir = createOutputDirectoryIfSpecifiedOrDefault("-s");
+        File generatedResourcesDir = createOutputDirectoryIfSpecifiedOrDefault("-r");
 
         List<String> command = createCommand();
 
@@ -89,6 +90,7 @@ public final class WsImportMojo extends AbstractMojo {
 
             buildContext.refresh(generatedClassesDir);
             buildContext.refresh(generatedSourceDir);
+            buildContext.refresh(generatedResourcesDir);
         } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }

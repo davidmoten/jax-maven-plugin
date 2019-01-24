@@ -1,4 +1,4 @@
-package com.github.davidmoten.wsimport;
+package com.github.davidmoten.jaxws;
 
 import com.sun.tools.ws.WsImport;
 
