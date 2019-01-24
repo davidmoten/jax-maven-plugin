@@ -4,10 +4,11 @@ import java.util.Set;
 
 import com.github.davidmoten.guavamini.Sets;
 
-public enum JaxCommand {
+enum JaxCommand {
 
     WSGEN(WsGenMain.class, "jaxws-maven-plugin-core", Sets.newHashSet("-r", "-d", "-s")), //
-    WSIMPORT(WsImportMain.class, "jaxws-maven-plugin-core", Sets.newHashSet("-d", "-s"));
+    WSIMPORT(WsImportMain.class, "jaxws-maven-plugin-core", Sets.newHashSet("-d", "-s")), //
+    XJC(XjcMain.class, "jaxws-maven-plugin-core", Sets.newHashSet("-d"));
 
     private final Class<?> mainClass;
     private final String artifactId;

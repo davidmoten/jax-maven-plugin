@@ -12,6 +12,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
         <jaxws.generated.sources>${project.build.directory}/generated-sources/jaxws</jaxws.generated.sources>
         <jaxws.generated.classes>${project.build.directory}/generated-classes/jaxws</jaxws.generated.classes>
         <jaxws.generated.resources>${project.build.directory}/generated-resources/jaxws</jaxws.generated.resources>
@@ -28,6 +29,13 @@
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
             <version>2.3.1</version>
+        </dependency>
+
+        <!-- required to support plugin execution `from-dtd-usePlugins` -->
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics</artifactId>
+            <version>${jaxb2.basics.version}</version>
         </dependency>
 
         <!-- test -->
@@ -108,6 +116,102 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>gen-from-dtd</id>
+                        <!-- generate sources from the java.util.logging 
+                            DTD -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <!-- These are the arguments you would normally 
+                                    have put with a call to xjc -->
+                                <argument>-verbose</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}</argument>
+                                <argument>-p</argument>
+                                <argument>dummy</argument>
+                                <argument>-dtd</argument>
+                                <argument>${project.basedir}/src/main/dtd/logger.dtd</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gen-from-xsd-kml</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <!--These are the arguments you would normally 
+                                    have put with a call to xjc -->
+                                <argument>-verbose</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}-dontinclude</argument>
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/xsd</argument>
+                                <argument>-b</argument>
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/bindings</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gen-from-xsd-kml-episode-gen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <!-- These are the arguments you would normally 
+                                    have put with a call to xjc -->
+                                <argument>-verbose</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}-dontinclude</argument>
+                                <argument>-episode</argument>
+                                <argument>${project.build.directory}/kml.episode</argument>
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/xsd</argument>
+                                <argument>-b</argument>
+                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/bindings</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>from-dtd-usePlugins</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
+                            </systemProperties>
+                            <arguments>
+                                <argument>-extension</argument>
+                                <argument>-verbose</argument>
+                                <argument>-Xequals</argument>
+                                <argument>-XhashCode</argument>
+                                <argument>-XtoString</argument>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}</argument>
+                                <argument>-p</argument>
+                                <argument>plugin.support</argument>
+                                <argument>-dtd</argument>
+                                <argument>${project.basedir}/src/main/dtd/logger.dtd</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -124,6 +228,7 @@
                         <configuration>
                             <sources>
                                 <source>${jaxws.generated.sources}</source>
+                                <source>${jaxb.generated}</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -136,6 +241,30 @@
                 <configuration>
                     <additionalJOption>-Xdoclint:none</additionalJOption>
                 </configuration>
+            </plugin>
+            <!-- Test purpose plugin - to allow .episode file appear in classpath -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>default-resources</id>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.episode</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
@@ -165,6 +294,7 @@
                                         <goals>
                                             <goal>wsimport</goal>
                                             <goal>wsgen</goal>
+                                            <goal>xjc</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
