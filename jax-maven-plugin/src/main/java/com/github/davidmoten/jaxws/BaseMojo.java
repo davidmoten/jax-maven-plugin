@@ -31,11 +31,14 @@ import com.google.common.collect.Lists;
 
 abstract class BaseMojo extends AbstractMojo {
 
-    @Parameter(required = true, name = "arguments")
+    @Parameter(name = "arguments", required = true)
     private List<String> arguments;
 
     @Parameter(name = "systemProperties")
     private Map<String, String> systemProperties;
+
+    @Parameter(name = "jvmArguments", required = false)
+    private List<String> jvmArguments;
 
     @Component
     private MavenProject project;
@@ -157,6 +160,11 @@ abstract class BaseMojo extends AbstractMojo {
                 javaExecutable, //
                 "-classpath", //
                 classpath.toString());
+        // add jvm arguments
+        if (jvmArguments != null) {
+            command.addAll(jvmArguments);
+        }
+        // add system properties
         if (systemProperties != null) {
             command.addAll(systemProperties //
                     .entrySet() //

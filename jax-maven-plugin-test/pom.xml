@@ -129,6 +129,9 @@
                             <systemProperties>
                                 <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
                             </systemProperties>
+                            <jvmArguments>
+                                <jvmArgument>-Xms32m</jvmArgument>
+                            </jvmArguments>
                             <arguments>
                                 <!-- These are the arguments you would normally 
                                     have put with a call to xjc -->
