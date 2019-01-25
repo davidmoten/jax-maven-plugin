@@ -10,6 +10,7 @@ Status: *in development*
 * detects the output directories and auto-creates if do not exist
 * sets system properties
 * sets JVM arguments
+* optionally sets classpath using maven
 * supports JAXB extensions
 * [unit tested](jax-maven-plugin-test) on Oracle JDK 8, 9, 10, 11 and OpenJDK 10, 11 (using Travis)
 
