@@ -307,7 +307,7 @@
                                             com.github.davidmoten
                                         </groupId>
                                         <artifactId>
-                                            jaxws-maven-plugin
+                                            jax-maven-plugin
                                         </artifactId>
                                         <versionRange>
                                             [0.1.4-SNAPSHOT,)
