@@ -155,7 +155,7 @@ mvn clean install -X
 ```
 
 ## Arguments
-See the Java 8 xjc [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/xjc.html) for descriptions of the arguments to pass to xjc using the plugin.
+See the Java 8 [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/#webservices) for descriptions of the arguments to pass to tools using the plugin.
 
 Note that if you don't specify the `-d` destination directory then generated source will be placed in the root of the project directory. In short, always specify the `-d` parameter.
 
