@@ -37,6 +37,12 @@
             <artifactId>jaxb2-basics</artifactId>
             <version>${jaxb2.basics.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>jaxws-maven-plugin-test-jaxb</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- test -->
         <dependency>
@@ -212,6 +218,21 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>schemagen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schemagen</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <arguments>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}</argument>
+                                <argument>com.github.davidmoten.jaxws.Employee</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -295,6 +316,7 @@
                                             <goal>wsimport</goal>
                                             <goal>wsgen</goal>
                                             <goal>xjc</goal>
+                                            <goal>schemagen</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>

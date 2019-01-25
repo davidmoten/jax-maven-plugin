@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,7 +30,7 @@ import org.zeroturnaround.exec.ProcessExecutor;
 import com.google.common.collect.Lists;
 
 abstract class BaseMojo extends AbstractMojo {
-    
+
     @Parameter(required = true, name = "arguments")
     private List<String> arguments;
 
@@ -52,7 +53,7 @@ abstract class BaseMojo extends AbstractMojo {
     private List<ArtifactRepository> remoteRepositories;
 
     private final JaxCommand cmd;
-    
+
     BaseMojo(JaxCommand cmd) {
         this.cmd = cmd;
     }
@@ -86,11 +87,10 @@ abstract class BaseMojo extends AbstractMojo {
         log.info(cmd + " mojo finished");
     }
 
-    private List<String> createCommand()
-            throws DependencyResolutionRequiredException {
+    private List<String> createCommand() throws DependencyResolutionRequiredException {
 
         Log log = getLog();
-        
+
         // https://stackoverflow.com/questions/1440224/how-can-i-download-maven-artifacts-within-a-plugin
 
         String mainArtifactVersion = Util.readConfigurationValue("project.parent.version");
@@ -166,30 +166,37 @@ abstract class BaseMojo extends AbstractMojo {
         }
         command.add(cmd.mainClass().getName());
 
-        // if -cp or -classpath parameter not set in arguments then use classpathScope
         if (this instanceof HasClasspathScope) {
+            // if -cp or -classpath parameter not set in arguments then use classpathScope
             String classpathScope = ((HasClasspathScope) this).classpathScope();
             if (!arguments //
                     .stream() //
                     .filter(x -> "-cp".equals(x.trim()) || "-classpath".equals(x.trim())) //
                     .findFirst() //
                     .isPresent()) {
-                List<String> cp;
+                // TODO will need to use non-deprecated way before Maven 4
+                Set<Artifact> artifacts = project.getDependencyArtifacts();
+                artifacts.stream().forEach(a -> log.info("dep=" + a.getArtifactId()));
+                List<String> cp = artifacts.stream().filter(a -> a.getScope().equals(classpathScope))
+                        .map(a -> a.getFile().getAbsolutePath()).collect(Collectors.toList());
                 if ("compile".equals(classpathScope)) {
-                    cp = project.getCompileClasspathElements();
+                    cp.addAll(project.getCompileClasspathElements());
                 } else if ("runtime".equals(classpathScope)) {
-                    cp = project.getRuntimeClasspathElements();
+                    cp.addAll(project.getRuntimeClasspathElements());
                 } else if ("test".equals(classpathScope)) {
-                    cp = project.getTestClasspathElements();
+                    cp.addAll(project.getTestClasspathElements());
                 } else {
                     throw new IllegalArgumentException("classpathScope " + classpathScope + " not recognized");
                 }
+
+                command.add("-cp");
                 command.add(cp.stream().collect(Collectors.joining(File.pathSeparator)));
             }
         }
         command.addAll(arguments);
-        log.info("arguments passed to " + cmd.mainClass().getName() + ":\n  "
-                + command.stream().collect(Collectors.joining("\n  ")) + "\n");
+        log.info("call arguments:\n  -----------------\n  " + command.stream().collect(Collectors.joining("\n  "))
+                + "\n  -----------------");
+
         return command;
     }
 }

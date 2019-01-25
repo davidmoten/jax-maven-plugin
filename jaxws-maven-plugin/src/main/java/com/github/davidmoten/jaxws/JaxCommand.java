@@ -9,7 +9,7 @@ enum JaxCommand {
     WSGEN(WsGenMain.class, Sets.newHashSet("-r", "-d", "-s")), //
     WSIMPORT(WsImportMain.class, Sets.newHashSet("-d", "-s")), //
     XJC(XjcMain.class, Sets.newHashSet("-d")), //
-    SCHEMAGEN(XjcMain.class, Sets.newHashSet("-d"));
+    SCHEMAGEN(SchemaGenMain.class, Sets.newHashSet("-d"));
 
     private final Class<?> mainClass;
     private final Set<String> directoryParameters;
@@ -19,11 +19,11 @@ enum JaxCommand {
         this.directoryParameters = directoryParameters;
     }
 
-    public Class<?> mainClass() {
+    Class<?> mainClass() {
         return mainClass;
     }
 
-    public Set<String> getDirectoryParameters() {
+    Set<String> getDirectoryParameters() {
         return directoryParameters;
     }
     
