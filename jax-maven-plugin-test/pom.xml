@@ -37,12 +37,6 @@
             <version>${jaxb.version}</version>
         </dependency>
         
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>${jaxb.version}</version>
-        </dependency>
-        
         <!-- required to support plugin execution `from-dtd-usePlugins` -->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
