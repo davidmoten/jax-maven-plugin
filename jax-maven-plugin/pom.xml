@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.davidmoten</groupId>
-        <artifactId>xjc-maven-plugin-parent</artifactId>
+        <artifactId>jax-maven-plugin-parent</artifactId>
         <version>0.1.4-SNAPSHOT</version>
     </parent>
 
