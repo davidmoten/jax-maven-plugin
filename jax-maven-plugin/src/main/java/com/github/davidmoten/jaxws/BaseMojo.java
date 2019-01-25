@@ -183,9 +183,15 @@ abstract class BaseMojo extends AbstractMojo {
                     .findFirst() //
                     .isPresent()) {
                 // TODO will need to use non-deprecated way before Maven 4
-                Set<Artifact> artifacts = project.getDependencyArtifacts();
+                Set<Artifact> directDependencies = project.getDependencyArtifacts();
+                Set<Artifact> artifacts = directDependencies //
+                        .stream() //
+                        .filter(a -> a.getScope().equals(classpathScope))
+                        .map(a -> Util.resolve(log, a, repositorySystem, localRepository, remoteRepositories).getArtifacts()) //
+                        .flatMap(list -> list.stream())
+                        .collect(Collectors.toSet());
                 artifacts.stream().forEach(a -> log.info("dep=" + a.getArtifactId()));
-                List<String> cp = artifacts.stream().filter(a -> a.getScope().equals(classpathScope))
+                List<String> cp = artifacts.stream()
                         .map(a -> a.getFile().getAbsolutePath()).collect(Collectors.toList());
                 if ("compile".equals(classpathScope)) {
                     cp.addAll(project.getCompileClasspathElements());
