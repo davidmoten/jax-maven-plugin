@@ -25,6 +25,12 @@
         <!-- Java 8, 9, 10 don't seem to be bothered by the existence of 
             these deps -->
 
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>jax-maven-plugin-test-jaxb</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
         <!-- required to support plugin execution `from-dtd-usePlugins` -->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
@@ -32,11 +38,6 @@
             <version>${jaxb2.basics.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>jax-maven-plugin-test-jaxb</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
 
         <!-- test -->
         <dependency>
