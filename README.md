@@ -1,5 +1,5 @@
 # jax-maven-plugin
-<a href="https://travis-ci.org/davidmoten/xjc-maven-plugin"><img src="https://travis-ci.org/davidmoten/jax-maven-plugin.svg"/></a><br/>
+<a href="https://travis-ci.org/davidmoten/jax-maven-plugin"><img src="https://travis-ci.org/davidmoten/jax-maven-plugin.svg"/></a><br/>
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin)
 
 Status: *in development*
@@ -11,7 +11,7 @@ Status: *in development*
 * sets system properties
 * sets JVM arguments
 * supports JAXB extensions
-* [unit tested](xjc-maven-plugin-test) on Oracle JDK 8, 9, 10, 11 and OpenJDK 10, 11 (using Travis)
+* [unit tested](jax-maven-plugin-test) on Oracle JDK 8, 9, 10, 11 and OpenJDK 10, 11 (using Travis)
 
 ## What about exec-maven-plugin?
 It is possible to use *exec-maven-plugin* to call `xjc` via the `java` goal or `exec` goal to call `XJCFacade.main` (which calls `com.sun.tools.xjc.Driver.run`). There are problems though:
@@ -20,7 +20,7 @@ It is possible to use *exec-maven-plugin* to call `xjc` via the `java` goal or `
 * With `exec:exec` you can call `XJCFacade.main` forked so that the `System.exit` doesn't kill the build **but** you have to build the classpath yourself (16 dependencies without maven to help you).
 * With both of the `exec` options you need to add a call to `antrun-maven-plugin` to create the destination directory if it doesn't exist.
 
-Instead of these poor options, use *xjc-maven-plugin*!
+Instead of these poor options, use *jax-maven-plugin*!
 
 ## How to build
 ```
@@ -29,7 +29,7 @@ mvn clean install
 
 ## Getting started
 
-Here's an example where we generate java classes with package `dummy` from an XSD file (pretty much a copy and paste from the [unit test project](xjc-maven-plugin-test)):
+Here's an example where we generate java classes with package `dummy` from an XSD file (pretty much a copy and paste from the [unit test project](jax-maven-plugin-test)):
 
 ```xml
 <properties>
@@ -110,7 +110,7 @@ Here's sample output from the plugin:
 ```
 [INFO] --- jax-maven-plugin:0.1.3-SNAPSHOT:xjc (gen-from-dtd) @ jax-maven-plugin-test ---
 [INFO] Starting xjc mojo
-[INFO] destination directory (-d option) specified and does not exist, creating: /home/dxm/Development/ide/eclipse/workspace-4.7/xjc-maven-plugin/xjc-maven-plugin-test/target/generated-sources/jaxb
+[INFO] destination directory (-d option) specified and does not exist, creating: /home/.../workspace/jax-maven-plugin/jax-maven-plugin-test/target/generated-sources/jaxb
 [INFO] setting up classpath for jaxb-xjc version 2.4.0-b180830.0438
 parsing a schema...
 compiling a schema...
@@ -128,7 +128,7 @@ dummy/Record.java
 
 Note that the `unknown location` line is associated with the `[INFO] generating code` line and can be ignored (it's supposed to report where in the input files an error is coming from but this INFO-level log line is not associated with a real problem so no location is included).
 
-If you want more detail including all classpath items for the `xjc` call then call:
+If you want more detail including all classpath items for the `xjc` or other call then call:
 
 ```bash
 mvn clean install -X
