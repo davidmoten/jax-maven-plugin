@@ -6,7 +6,7 @@ Status: *in development*
 
 ## Features
 * supports `xjc`, `wsimport`, `wsgen`, `schemagen`
-* supports Java 8, 9, 10, 11+, generates code from DTD or XSD
+* supports Java 8, 9, 10, 11+ 
 * detects the output directories and auto-creates if do not exist
 * sets system properties
 * sets JVM arguments
