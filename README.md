@@ -1,19 +1,15 @@
-# xjc-maven-plugin
-<a href="https://travis-ci.org/davidmoten/xjc-maven-plugin"><img src="https://travis-ci.org/davidmoten/xjc-maven-plugin.svg"/></a><br/>
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/xjc-maven-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/xjc-maven-plugin)
+# jax-maven-plugin
+<a href="https://travis-ci.org/davidmoten/xjc-maven-plugin"><img src="https://travis-ci.org/davidmoten/jax-maven-plugin.svg"/></a><br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin)
 
-The `xjc` executable is not present in the JDK as of version 11. However, the functionality of `xjc` is still available (right down to the command line arguments to that original executable) via external artifacts like *org.glassfish.jaxb:jaxb-xjc*.
-
-*xjc-maven-plugin* sets up the classpath dependencies and passes the arguments you provide directly through to the `com.sun.tools.xjc.Driver.run` method.
-
-The development of this plugin was motivated by [problems](https://github.com/mojohaus/jaxb2-maven-plugin/issues/43) with the *jaxb2-maven-plugin* with Java 9+. My company's codebase used *jaxb2-maven-plugin* in ~10 locations (always the `xjc` goal) and we wanted to move to OpenJDK 11+ given the EOL (unpaid) for Oracle Java 8 in January 2019.
-
-Status: *deployed to Maven Central*
+Status: *in development*
 
 ## Features
-* Supports Java 8, 9, 10, 11+, generates code from DTD or XSD
-* detects the `-d` destination directoy and auto-creates directory if does not exist
+* supports `xjc`, `wsimport`, `wsgen`, `schemagen`
+* supports Java 8, 9, 10, 11+, generates code from DTD or XSD
+* detects the output directories and auto-creates if do not exist
 * sets system properties
+* sets JVM arguments
 * supports JAXB extensions
 * [unit tested](xjc-maven-plugin-test) on Oracle JDK 8, 9, 10, 11 and OpenJDK 10, 11 (using Travis)
 
@@ -42,7 +38,7 @@ Here's an example where we generate java classes with package `dummy` from an XS
 ...
 <plugin>
     <groupId>com.github.davidmoten</groupId>
-    <artifactId>xjc-maven-plugin</artifactId>
+    <artifactId>jax-maven-plugin</artifactId>
     <version>VERSION_HERE</version>
     <executions>
         <execution>
@@ -112,7 +108,7 @@ Here's an example where we generate java classes with package `dummy` from an XS
 Here's sample output from the plugin:
 
 ```
-[INFO] --- xjc-maven-plugin:0.1.3-SNAPSHOT:xjc (gen-from-dtd) @ xjc-maven-plugin-test ---
+[INFO] --- jax-maven-plugin:0.1.3-SNAPSHOT:xjc (gen-from-dtd) @ jax-maven-plugin-test ---
 [INFO] Starting xjc mojo
 [INFO] destination directory (-d option) specified and does not exist, creating: /home/dxm/Development/ide/eclipse/workspace-4.7/xjc-maven-plugin/xjc-maven-plugin-test/target/generated-sources/jaxb
 [INFO] setting up classpath for jaxb-xjc version 2.4.0-b180830.0438
@@ -149,8 +145,8 @@ If you add dependencies to the classpath used by `xjc` and include the `-extensi
 ```xml
 <plugin>
     <groupId>com.github.davidmoten</groupId>
-    <artifactId>xjc-maven-plugin</artifactId>
-    <version>${project.parent.version}</version>
+    <artifactId>jax-maven-plugin</artifactId>
+    <version>VERSION_HERE</version>
     <dependencies>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
@@ -164,9 +160,9 @@ If you add dependencies to the classpath used by `xjc` and include the `-extensi
 </plugin>
 ```
 
-A fully worked example that generates `hashCode`, `equals` and `toString` methods in generated classes is in [xjc-maven-plugin-tests](xjc-maven-plugin-test/pom.xml).
+A fully worked example that generates `hashCode`, `equals` and `toString` methods in generated classes is in [jax-maven-plugin-tests](jax-maven-plugin-test/pom.xml).
 
 A big thank you to @Glebcher601 for contributing extension support!
 
 ## Update the JAXB version used
-For project maintainers, to use a new version of *jaxb-xjc* just update the `glassfish.jaxb.version` in the root pom.xml.
+For project maintainers, to use a new version of *jaxb* just update the `glassfish.jaxb.version` in the root pom.xml.
