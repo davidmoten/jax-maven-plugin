@@ -103,7 +103,7 @@ abstract class BaseMojo extends AbstractMojo {
         //////////////////////////////////////////////////////////////////
 
         Artifact artifact = repositorySystem.createArtifact( //
-                mainArtifactGroupId, "jaxws-maven-plugin-core", mainArtifactVersion, "", "jar");
+                mainArtifactGroupId, "jax-maven-plugin-core", mainArtifactVersion, "", "jar");
 
         log.info("setting up classpath for jaxws-tools version " + mainArtifactVersion);
 

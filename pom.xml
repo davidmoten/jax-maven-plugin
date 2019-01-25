@@ -70,9 +70,9 @@
         <module>xjc-maven-plugin-core</module>
         <module>xjc-maven-plugin</module>
         <module>xjc-maven-plugin-test</module>
-        <module>jaxws-maven-plugin-core</module>
-        <module>jaxws-maven-plugin</module>
-        <module>jaxws-maven-plugin-test-jaxb</module>
-        <module>jaxws-maven-plugin-test</module>
+        <module>jax-maven-plugin-core</module>
+        <module>jax-maven-plugin</module>
+        <module>jax-maven-plugin-test-jaxb</module>
+        <module>jax-maven-plugin-test</module>
     </modules>
 </project>

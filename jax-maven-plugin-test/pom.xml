@@ -8,7 +8,7 @@
         <version>0.1.4-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jaxws-maven-plugin-test</artifactId>
+    <artifactId>jax-maven-plugin-test</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -40,7 +40,7 @@
         
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>jaxws-maven-plugin-test-jaxb</artifactId>
+            <artifactId>jax-maven-plugin-test-jaxb</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -65,7 +65,7 @@
             </plugin>
             <plugin>
                 <groupId>com.github.davidmoten</groupId>
-                <artifactId>jaxws-maven-plugin</artifactId>
+                <artifactId>jax-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
                 <dependencies>
                     <dependency>
