@@ -25,24 +25,6 @@
         <!-- Java 8, 9, 10 don't seem to be bothered by the existence of 
             these deps -->
 
-        <dependency>
-            <groupId>javax.xml.ws</groupId>
-            <artifactId>jaxws-api</artifactId>
-            <version>${jaxb.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>2.3.0.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>${jaxb.version}</version>
-        </dependency>
-        
         <!-- required to support plugin execution `from-dtd-usePlugins` -->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
