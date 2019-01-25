@@ -166,4 +166,4 @@ A fully worked example that generates `hashCode`, `equals` and `toString` method
 A big thank you to @Glebcher601 for contributing extension support!
 
 ## Update the JAXB version used
-For project maintainers, to use a new version of *jaxb* just update the `glassfish.jaxb.version` in the root pom.xml.
+For project maintainers, to use a new version of *jaxb* just update the `jaxb.version` in the root pom.xml.
