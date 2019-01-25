@@ -64,6 +64,9 @@ Here's an example where we generate java classes with package `dummy` from an XS
                             <systemProperties>
                                 <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
                             </systemProperties>
+                            <jvmArguments>
+                                <jvmArgument>-Xmx32m</jvmArgument>
+                            </jvmArguments>
                             <arguments>
                                 <!-- These are the arguments you would normally 
                                      have used with a call to xjc -->
@@ -109,10 +112,26 @@ Here's an example where we generate java classes with package `dummy` from an XS
 Here's sample output from the plugin:
 
 ```
-[INFO] --- jax-maven-plugin:0.1.3-SNAPSHOT:xjc (gen-from-dtd) @ jax-maven-plugin-test ---
-[INFO] Starting xjc mojo
-[INFO] destination directory (-d option) specified and does not exist, creating: /home/.../workspace/jax-maven-plugin/jax-maven-plugin-test/target/generated-sources/jaxb
-[INFO] setting up classpath for jaxb-xjc version 2.4.0-b180830.0438
+[INFO] --- jax-maven-plugin:0.1.4-SNAPSHOT:xjc (gen-from-dtd) @ jax-maven-plugin-test ---
+[INFO] Starting XJC mojo
+[INFO] destination directory (-d option) specified and does not exist, creating: /home/dxm/Development/ide/eclipse/workspace-4.7/jax-maven-plugin/jax-maven-plugin-test/target/generated-sources/jaxb
+[INFO] setting up classpath for jaxws-tools version 0.1.4-SNAPSHOT
+[INFO] call arguments:
+  -----------------
+  /opt/jdk/jdk-11.0.2/bin/java
+  -classpath
+  /home/dxm/Development/ide/eclipse/workspace-4.7/jax-maven-plugin/jax-maven-plugin-core/target/jax-maven-plugin-core-0.1.4-SNAPSHOT.jar:/home/dxm/.m2/repository/com/sun/xml/ws/jaxws-tools/2.3.1/jaxws-tools-2.3.1.jar:/home/dxm/.m2/repository/com/sun/xml/ws/jaxws-rt/2.3.1/jaxws-rt-2.3.1.jar:/home/dxm/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/home/dxm/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/home/dxm/.m2/repository/javax/xml/ws/jaxws-api/2.3.1/jaxws-api-2.3.1.jar:/home/dxm/.m2/repository/javax/xml/soap/javax.xml.soap-api/1.4.0/javax.xml.soap-api-1.4.0.jar:/home/dxm/.m2/repository/javax/annotation/javax.annotation-api/1.3.2/javax.annotation-api-1.3.2.jar:/home/dxm/.m2/repository/javax/jws/javax.jws-api/1.1/javax.jws-api-1.1.jar:/home/dxm/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar:/home/dxm/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar:/home/dxm/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar:/home/dxm/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar:/home/dxm/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar:/home/dxm/.m2/repository/com/sun/xml/ws/policy/2.7.5/policy-2.7.5.jar:/home/dxm/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar:/home/dxm/.m2/repository/org/glassfish/gmbal/gmbal-api-only/3.1.0-b001/gmbal-api-only-3.1.0-b001.jar:/home/dxm/.m2/repository/org/glassfish/external/management-api/3.0.0-b012/management-api-3.0.0-b012.jar:/home/dxm/.m2/repository/com/sun/xml/stream/buffer/streambuffer/1.5.6/streambuffer-1.5.6.jar:/home/dxm/.m2/repository/org/jvnet/mimepull/mimepull/1.9.10/mimepull-1.9.10.jar:/home/dxm/.m2/repository/org/glassfish/ha/ha-api/3.1.9/ha-api-3.1.9.jar:/home/dxm/.m2/repository/com/sun/xml/messaging/saaj/saaj-impl/1.5.0/saaj-impl-1.5.0.jar:/home/dxm/.m2/repository/com/fasterxml/woodstox/woodstox-core/5.1.0/woodstox-core-5.1.0.jar:/home/dxm/.m2/repository/org/codehaus/woodstox/stax2-api/4.1/stax2-api-4.1.jar:/home/dxm/.m2/repository/com/sun/xml/bind/jaxb-xjc/2.3.1/jaxb-xjc-2.3.1.jar:/home/dxm/.m2/repository/com/sun/xml/bind/jaxb-jxc/2.3.1/jaxb-jxc-2.3.1.jar:/home/dxm/.m2/repository/org/jvnet/jaxb2_commons/jaxb2-basics/1.11.1/jaxb2-basics-1.11.1.jar:/home/dxm/.m2/repository/org/jvnet/jaxb2_commons/jaxb2-basics-runtime/1.11.1/jaxb2-basics-runtime-1.11.1.jar:/home/dxm/.m2/repository/org/jvnet/jaxb2_commons/jaxb2-basics-tools/1.11.1/jaxb2-basics-tools-1.11.1.jar:/home/dxm/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar:/home/dxm/.m2/repository/commons-beanutils/commons-beanutils/1.9.2/commons-beanutils-1.9.2.jar:/home/dxm/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar:/home/dxm/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.7/jcl-over-slf4j-1.7.7.jar:/home/dxm/.m2/repository/org/apache/commons/commons-lang3/3.2.1/commons-lang3-3.2.1.jar:/home/dxm/.m2/repository/com/google/code/javaparser/javaparser/1.0.11/javaparser-1.0.11.jar
+  -Xms32m
+  -DenableExternalEntityProcessing=true
+  com.github.davidmoten.jaxws.XjcMain
+  -verbose
+  -d
+  /home/dxm/Development/ide/eclipse/workspace-4.7/jax-maven-plugin/jax-maven-plugin-test/target/generated-sources/jaxb
+  -p
+  dummy
+  -dtd
+  /home/dxm/Development/ide/eclipse/workspace-4.7/jax-maven-plugin/jax-maven-plugin-test/src/main/dtd/logger.dtd
+  -----------------
 parsing a schema...
 compiling a schema...
 [INFO] generating code
@@ -124,7 +143,7 @@ dummy/Log.java
 dummy/ObjectFactory.java
 dummy/Param.java
 dummy/Record.java
-[INFO] xjc mojo finished
+[INFO] XJC mojo finished
 ```
 
 Note that the `unknown location` line is associated with the `[INFO] generating code` line and can be ignored (it's supposed to report where in the input files an error is coming from but this INFO-level log line is not associated with a real problem so no location is included).
