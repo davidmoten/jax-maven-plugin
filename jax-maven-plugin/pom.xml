@@ -54,7 +54,7 @@
 
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>jaxws-maven-plugin-core</artifactId>
+            <artifactId>jax-maven-plugin-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         
@@ -63,7 +63,6 @@
             <artifactId>guava-mini</artifactId>
             <version>0.1.2</version>
         </dependency>
-        
 
         <!-- test -->
         <dependency>
