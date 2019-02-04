@@ -14,7 +14,6 @@
     <properties>
         <maven.plugin.version>3.6.0</maven.plugin.version>
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
-        <com.sun.xml.ws.version>2.3.1</com.sun.xml.ws.version>
     </properties>
 
     <dependencies>
@@ -43,7 +42,7 @@
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
-            <version>${jaxb.version}</version>
+            <version>${javax.xml.bind.version}</version>
         </dependency>
 
         <dependency>
@@ -68,7 +67,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 

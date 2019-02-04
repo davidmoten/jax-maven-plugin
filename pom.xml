@@ -22,7 +22,10 @@
         <compiler.plugin.version>3.8.0</compiler.plugin.version>
         <!-- note that if you change the jaxb version you need to change 
             the hard-coded version in XjcMojo.java as well -->
-        <jaxb.version>2.3.1</jaxb.version>
+        <com.sun.xml.bind.version>2.3.0.1</com.sun.xml.bind.version>
+        <com.sun.xml.ws.version>2.3.1</com.sun.xml.ws.version>
+        <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
+        <junit.version>4.12</junit.version>
         <scm.url>scm:git:https://github.com/davidmoten/jax-maven-plugin.git</scm.url>
     </properties>
 
