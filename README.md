@@ -155,7 +155,7 @@ Above are examples of `<systemProperties>`, `<jvmArguments>`, `<arguments>`. In 
 ## Arguments
 See the Java 8 [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/#webservices) for descriptions of the arguments to pass to tools using the plugin.
 
-Note that if you don't specify the `-d` destination directory then generated source will be placed in the root of the project directory. In short, always specify the `-d` parameter.
+Note that if you don't specify the destination directories for generated code and resources then the generated files will be placed in the root of the project directory. In short, always specify those parameters.
 
 ## Using JAXB extensions
 If you add dependencies to the classpath used by `xjc` and include the `-extension` flag then you can customise the generated code. To add dependencies to the classpath of `xjc` use the `<dependencies>` element as below (let's add the [*jaxb2-basics*](https://github.com/highsource/jaxb2-basics/wiki/Using-JAXB2-Basics-Plugins) dependency):
