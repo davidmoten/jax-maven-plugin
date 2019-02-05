@@ -72,7 +72,10 @@ Here's an `xjc` example where we generate java classes with package `dummy` from
         </execution>
     </executions>
 </plugin>
-<!-- ensure the generated sources are on the classpath (and in built jar) -->
+
+<!-- ensure the generated sources are detected by Eclipse and other IDEs (optional) -->
+<!-- the plugin will by default add generated sources to the compile source path -->
+<!-- and generated resources to the built artifact -->
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
@@ -142,6 +145,10 @@ mvn clean install -X
 ### Examples for wsgen, wsimport, schemagen
 
 See the relevant executions for *jax-maven-plugin* in the unit test project [pom.xml](jax-maven-plugin-test/pom.xml)
+
+### Configuration options for the plugin
+
+Above are examples of `<systemProperties>`, `<jvmArguments>`, `<arguments>`. In addition you can specify `<addSources>` and `<addResources>` with boolean values (the default is `true`). These two options determine if generated source/resources are added to the source compile or as resources in the built artifact.
 
 ## Arguments
 See the Java 8 [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/#webservices) for descriptions of the arguments to pass to tools using the plugin.
