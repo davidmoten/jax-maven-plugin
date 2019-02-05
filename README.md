@@ -182,5 +182,19 @@ A fully worked example that generates `hashCode`, `equals` and `toString` method
 
 A big thank you to @Glebcher601 for contributing extension support!
 
-## Update the JAXB version used
-For project maintainers, to use a new version of *jaxb* just update the `jaxb.version` in the root pom.xml.
+## Update the JAXB/JAXWS version used
+For project maintainers, JAXB and JAXWS versions are controlled by these system properties in the parent pom.xml:
+
+```
+<!-- e.g. jaxb-ri -->
+<com.sun.xml.bind.version>2.3.0.1</com.sun.xml.bind.version>
+
+<!-- e.g. jaxws-rt -->
+<com.sun.xml.ws.version>2.3.1</com.sun.xml.ws.version>
+
+<!-- e.g. jaxb-api -->
+<javax.xml.bind.version>2.3.1</javax.xml.bind.version>
+```
+
+The release cycles of the artifacts using these versions are not all in sync so upgrades need to be done with care.
+
