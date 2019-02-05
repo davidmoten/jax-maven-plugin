@@ -118,7 +118,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>gen-from-dtd</id>
+                        <id>xjc-dtd</id>
                         <!-- generate sources from the java.util.logging 
                             DTD -->
                         <phase>generate-sources</phase>

@@ -30,7 +30,8 @@ mvn clean install
 
 ## Getting started
 
-Here's an example where we generate java classes with package `dummy` from an XSD file (pretty much a copy and paste from the [unit test project](jax-maven-plugin-test)):
+### XJC example
+Here's an `xjc` example where we generate java classes with package `dummy` from an XSD file (pretty much a copy and paste from the [unit test project](jax-maven-plugin-test)):
 
 ```xml
 <properties>
@@ -43,7 +44,7 @@ Here's an example where we generate java classes with package `dummy` from an XS
     <version>VERSION_HERE</version>
     <executions>
         <execution>
-            <id>gen</id>
+            <id>xjc-generate-from-dtd</id>
             <!-- generate sources from the java.util.logging DTD -->
             <phase>generate-sources</phase>
             <goals>
@@ -53,35 +54,20 @@ Here's an example where we generate java classes with package `dummy` from an XS
                 <systemProperties>
                     <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
                 </systemProperties>
-                <execution>
-                        <id>gen-from-xsd-kml</id>
-                        <!-- generate sources from the kml 2.2 xsd -->
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                        <configuration>
-                            <systemProperties>
-                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
-                            </systemProperties>
-                            <jvmArguments>
-                                <jvmArgument>-Xmx32m</jvmArgument>
-                            </jvmArguments>
-                            <arguments>
-                                <!-- These are the arguments you would normally 
-                                     have used with a call to xjc -->
-                                <argument>-verbose</argument>
-                                <!-- set the directory to hold generated classees -->
-                                <argument>-d</argument>
-                                <argument>${jaxb.generated}</argument>
-                                <! -- set the directory containing schemas to convert to classes -->
-                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/xsd</argument>
-                                <!-- set the directory containing jaxb bindings (customizations) -->
-                                <argument>-b</argument>
-                                <argument>${project.basedir}/src/main/jaxb/kml-2-2/bindings</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
+                <jvmArguments>
+                    <jvmArgument>-Xms32m</jvmArgument>
+                </jvmArguments>
+                <arguments>
+                    <!-- These are the arguments you would normally 
+                        have put with a call to xjc -->
+                    <argument>-verbose</argument>
+                    <argument>-d</argument>
+                    <argument>${jaxb.generated}</argument>
+                    <argument>-p</argument>
+                    <argument>dummy</argument>
+                    <argument>-dtd</argument>
+                    <argument>${project.basedir}/src/main/dtd/logger.dtd</argument>
+                </arguments>
             </configuration>
         </execution>
     </executions>
@@ -108,11 +94,11 @@ Here's an example where we generate java classes with package `dummy` from an XS
 </plugin>
 ```
 
-## Output
+### Output
 Here's sample output from the plugin:
 
 ```
-[INFO] --- jax-maven-plugin:0.1.4-SNAPSHOT:xjc (gen-from-dtd) @ jax-maven-plugin-test ---
+[INFO] --- jax-maven-plugin:0.1.4-SNAPSHOT:xjc (xjc-generate-from-dtd) @ jax-maven-plugin-test ---
 [INFO] Starting XJC mojo
 [INFO] destination directory (-d option) specified and does not exist, creating: /home/dave/workspace/jax-maven-plugin/jax-maven-plugin-test/target/generated-sources/jaxb
 [INFO] setting up classpath for jaxws-tools version 0.1.4-SNAPSHOT
@@ -153,6 +139,9 @@ If you want more detail including all classpath items for the `xjc` or other cal
 ```bash
 mvn clean install -X
 ```
+### Examples for wsgen, wsimport, schemagen
+
+See the relevant executions for *jax-maven-plugin* in the unit test project [pom.xml](jax-maven-plugin-test/pom.xml)
 
 ## Arguments
 See the Java 8 [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/#webservices) for descriptions of the arguments to pass to tools using the plugin.
