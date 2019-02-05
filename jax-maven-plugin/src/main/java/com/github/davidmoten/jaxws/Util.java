@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +28,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
 
 class Util {
-    
+
     private static final String PLUGIN_DESCRIPTOR = "pluginDescriptor";
 
     static File createOutputDirectoryIfSpecifiedOrDefault(Log log, String param, List<String> arguments) {
@@ -38,13 +39,23 @@ class Util {
                     log.info("destination directory (" + param + " option) specified and does not exist, creating: "
                             + outputDir);
                     outputDir.mkdirs();
-                } 
+                }
                 return outputDir;
             }
         }
         log.warn("destination directory (" + param
                 + " option) NOT specified. Generated source will be placed in project root if -keep argument is present.");
         return new File(".");
+    }
+
+    static Optional<String> getNextArgument(List<String> arguments, String argument) {
+        for (int i = 0; i < arguments.size() - 1; i++) {
+            String arg = arguments.get(i);
+            if (argument.equals(arg)) {
+                return Optional.of(arguments.get(i + 1));
+            } 
+        }
+        return Optional.empty();
     }
 
     private static boolean isOptionParamSpecifiedAndNotEmpty(List<String> arguments, int index, String param) {
@@ -153,7 +164,7 @@ class Util {
             throw new UncheckedIOException(e);
         }
     }
-    
+
     static Stream<String> getPluginRuntimeDependencyEntries(AbstractMojo mojo, MavenProject project, Log log,
             RepositorySystem repositorySystem, ArtifactRepository localRepository,
             List<ArtifactRepository> remoteRepositories) {

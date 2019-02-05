@@ -15,6 +15,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -39,6 +40,12 @@ abstract class BaseMojo extends AbstractMojo {
 
     @Parameter(name = "jvmArguments", required = false)
     private List<String> jvmArguments;
+
+    @Parameter(name = "addSources", defaultValue = "true")
+    private boolean addSources;
+
+    @Parameter(name = "addResources", defaultValue = "true")
+    private boolean addResources;
 
     @Component
     private MavenProject project;
@@ -83,11 +90,41 @@ abstract class BaseMojo extends AbstractMojo {
 
             outputDirectories.forEach(buildContext::refresh);
 
+            addSources(log);
+            
+            addResources(log);
+
         } catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException
                 | DependencyResolutionRequiredException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
         log.info(cmd + " mojo finished");
+    }
+
+    private void addResources(Log log) {
+        if (addResources) {
+            cmd //
+                    .getResourceParameter() //
+                    .flatMap(parameterName -> Util.getNextArgument(arguments, parameterName)) //
+                    .ifPresent(x -> {
+                        Resource resource = new Resource();
+                        resource.setDirectory(x);
+                        project.addResource(resource);
+                        log.info("added resource folder: " + x);
+                    });
+        }
+    }
+
+    private void addSources(Log log) {
+        if (addSources) {
+            cmd //
+                    .getSourceParameter() //
+                    .flatMap(parameterName -> Util.getNextArgument(arguments, parameterName)) //
+                    .ifPresent(x -> {
+                        project.addCompileSourceRoot(x);
+                        log.info("added source folder to compile: " + x);
+                    });
+        }
     }
 
     private List<String> createCommand() throws DependencyResolutionRequiredException {
@@ -187,12 +224,12 @@ abstract class BaseMojo extends AbstractMojo {
                 Set<Artifact> artifacts = directDependencies //
                         .stream() //
                         .filter(a -> a.getScope().equals(classpathScope))
-                        .map(a -> Util.resolve(log, a, repositorySystem, localRepository, remoteRepositories).getArtifacts()) //
-                        .flatMap(list -> list.stream())
-                        .collect(Collectors.toSet());
+                        .map(a -> Util.resolve(log, a, repositorySystem, localRepository, remoteRepositories)
+                                .getArtifacts()) //
+                        .flatMap(list -> list.stream()).collect(Collectors.toSet());
                 artifacts.stream().forEach(a -> log.info("dep=" + a.getArtifactId()));
-                List<String> cp = artifacts.stream()
-                        .map(a -> a.getFile().getAbsolutePath()).collect(Collectors.toList());
+                List<String> cp = artifacts.stream().map(a -> a.getFile().getAbsolutePath())
+                        .collect(Collectors.toList());
                 if ("compile".equals(classpathScope)) {
                     cp.addAll(project.getCompileClasspathElements());
                 } else if ("runtime".equals(classpathScope)) {
