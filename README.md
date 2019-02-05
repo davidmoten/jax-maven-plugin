@@ -2,7 +2,7 @@
 <a href="https://travis-ci.org/davidmoten/jax-maven-plugin"><img src="https://travis-ci.org/davidmoten/jax-maven-plugin.svg"/></a><br/>
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin)
 
-Status: *in development*
+Status: *released to Maven Central*
 
 ## Features
 * supports `xjc`, `wsimport`, `wsgen`, `schemagen`
@@ -73,9 +73,11 @@ Here's an `xjc` example where we generate java classes with package `dummy` from
     </executions>
 </plugin>
 
-<!-- ensure the generated sources are detected by Eclipse and other IDEs (optional) -->
+<!-- OPTIONAL -->
+<!-- ensure the generated sources are detected by Eclipse and other IDEs -->
 <!-- the plugin will by default add generated sources to the compile source path -->
-<!-- and generated resources to the built artifact -->
+<!-- and generated resources to the built artifact but an IDE does not know -->
+<!-- that this happened. -->
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
