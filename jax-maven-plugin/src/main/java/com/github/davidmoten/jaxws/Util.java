@@ -38,12 +38,12 @@ class Util {
                     log.info("destination directory (" + param + " option) specified and does not exist, creating: "
                             + outputDir);
                     outputDir.mkdirs();
-                    return outputDir;
-                }
+                } 
+                return outputDir;
             }
         }
         log.warn("destination directory (" + param
-                + " option) NOT specified. Generated source will be placed in project root.");
+                + " option) NOT specified. Generated source will be placed in project root if -keep argument is present.");
         return new File(".");
     }
 
