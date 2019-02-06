@@ -183,7 +183,7 @@ A fully worked example that generates `hashCode`, `equals` and `toString` method
 A big thank you to @Glebcher601 for contributing extension support!
 
 ## Update the JAXB/JAXWS version used
-For project maintainers, JAXB and JAXWS versions are controlled by these system properties in the parent pom.xml:
+For project maintainers, JAXB and JAXWS versions are controlled by these system properties in the parent [pom.xml](pom.xml):
 
 ```
 <!-- e.g. jaxb-ri -->
