@@ -92,6 +92,7 @@ abstract class BaseMojo extends AbstractMojo {
 
             new ProcessExecutor() //
                     .command(command) //
+                    .directory((project.getBasedir()))
                     .exitValueNormal() //
                     .redirectOutput(System.out) //
                     .redirectError(System.out) //
@@ -257,8 +258,7 @@ abstract class BaseMojo extends AbstractMojo {
         if (this instanceof SchemaGenMojo) {
             List<String> sources = ((SchemaGenMojo) this).sources();
             Set<String> javaSourceFiles = new HashSet<>();
-            Path basePath = Paths.get(project.getBasedir().toURI());
-            FileVisitor<? super Path> visitor = new JavaFileVisitor(javaSourceFiles, basePath);
+            FileVisitor<? super Path> visitor = new JavaFileVisitor(javaSourceFiles);
             sources
                 .stream()
                 .forEach(source -> {
@@ -280,17 +280,15 @@ abstract class BaseMojo extends AbstractMojo {
     private class JavaFileVisitor extends SimpleFileVisitor<Path> {
 
         private final Set<String> javaFiles;
-        private final Path basePath;
 
-        private JavaFileVisitor(Set<String> javaFiles, Path basePath) {
+        private JavaFileVisitor(Set<String> javaFiles) {
             this.javaFiles = javaFiles;
-            this.basePath = basePath;
         }
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
             if (file.toString().toLowerCase().endsWith(".java")) {
-                this.javaFiles.add(basePath.relativize(file).toString());
+                this.javaFiles.add(file.toString());
             }
             return FileVisitResult.CONTINUE;
         }
