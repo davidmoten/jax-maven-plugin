@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
-@Mojo(name = "schemagen")
+@Mojo(name = "schemagen", requiresDependencyResolution = ResolutionScope.COMPILE)
 public final class SchemaGenMojo extends BaseMojo implements HasClasspathScope {
 
     @Parameter(name = "classpathScope", defaultValue = "compile")
