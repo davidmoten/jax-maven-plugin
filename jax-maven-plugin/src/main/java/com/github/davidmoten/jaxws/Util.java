@@ -27,6 +27,8 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
 
+import com.google.common.base.Preconditions;
+
 class Util {
 
     private static final String PLUGIN_DESCRIPTOR = "pluginDescriptor";
@@ -34,7 +36,9 @@ class Util {
     static File createOutputDirectoryIfSpecifiedOrDefault(Log log, String param, List<String> arguments) {
         for (int i = 0; i < arguments.size(); i++) {
             if (isOptionParamSpecifiedAndNotEmpty(arguments, i, param)) {
-                File outputDir = new File(arguments.get(i + 1));
+                String path = arguments.get(i + 1);
+                Preconditions.checkNotNull(path, "path for output directory not found, option="+ param);
+                File outputDir = new File(path);
                 if (!outputDir.exists()) {
                     log.info("destination directory (" + param + " option) specified and does not exist, creating: "
                             + outputDir);
