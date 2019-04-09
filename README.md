@@ -7,8 +7,8 @@ Status: *released to Maven Central*
 ## Features
 * supports `xjc`, `wsimport`, `wsgen`, `schemagen`
 * supports Java 8, 9, 10, 11+ 
-* supports specifying the source Java files as directories (only for `schemagen` goal)
 * detects the output directories and auto-creates if do not exist
+* supports specifying the source Java files as directories (only for `schemagen` goal)
 * sets system properties
 * sets JVM arguments
 * optionally sets classpath using maven
@@ -151,7 +151,7 @@ mvn clean install -X
 ```
 ### Examples for wsgen, wsimport, schemagen
 
-See the relevant executions for *jax-maven-plugin* in the unit test project [pom.xml](jax-maven-plugin-test/pom.xml)
+See the relevant executions for *jax-maven-plugin* in the unit test project [pom.xml](jax-maven-plugin-test/pom.xml).
 
 ### Configuration options for the plugin
 
@@ -161,6 +161,36 @@ Above are examples of `<systemProperties>`, `<jvmArguments>`, `<arguments>`. In 
 See the Java 8 [documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/#webservices) for descriptions of the arguments to pass to tools using the plugin.
 
 Note that if you don't specify the destination directories for generated code and resources then the generated files will be placed in the root of the project directory. In short, always specify those parameters.
+
+## schemagen
+The `schemagen` goal has a special configuration option to allow you to specify all java source files in a directory as input. For example:
+
+```java
+<plugin>
+    <groupId>com.github.davidmoten</groupId>
+    <artifactId>jax-maven-plugin</artifactId>
+    <version>VERSION_HERE</version>
+    <executions>
+        <execution>
+            <id>schemagen-source-option</id>
+            <phase>generate-sources</phase>
+            <goals>
+                <goal>schemagen</goal>
+            </goals>
+            <configuration>
+                <classpathScope>compile</classpathScope>
+                <sources>
+                    <source>${basedir}/src/main/java</source>
+                </sources>
+                <arguments>
+                    <argument>-d</argument>
+                    <argument>${jaxb.generated}</argument>
+                </arguments>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
 
 ## Using JAXB extensions
 If you add dependencies to the classpath used by `xjc` and include the `-extension` flag then you can customise the generated code. To add dependencies to the classpath of `xjc` use the `<dependencies>` element as below (let's add the [*jaxb2-basics*](https://github.com/highsource/jaxb2-basics/wiki/Using-JAXB2-Basics-Plugins) dependency):
