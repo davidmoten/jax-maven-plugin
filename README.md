@@ -7,6 +7,7 @@ Status: *released to Maven Central*
 ## Features
 * supports `xjc`, `wsimport`, `wsgen`, `schemagen`
 * supports Java 8, 9, 10, 11+ 
+* supports specifying the source Java files as directories (only for `schemagen` goal)
 * detects the output directories and auto-creates if do not exist
 * sets system properties
 * sets JVM arguments

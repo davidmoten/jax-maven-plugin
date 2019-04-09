@@ -229,6 +229,23 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>schemagen-source-option</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schemagen</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <sources>
+                                <source>${basedir}/../jax-maven-plugin-test-jaxb/src/main/java</source>
+                            </sources>
+                            <arguments>
+                                <argument>-d</argument>
+                                <argument>${jaxb.generated}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

@@ -2,8 +2,9 @@ package com.github.davidmoten.jaxws;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
-@Mojo(name = "wsgen")
+@Mojo(name = "wsgen", requiresDependencyResolution = ResolutionScope.COMPILE)
 public final class WsGenMojo extends BaseMojo implements HasClasspathScope {
 
     @Parameter(name = "classpathScope", defaultValue = "compile")

@@ -2,8 +2,17 @@ package com.github.davidmoten.jaxws;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,6 +92,7 @@ abstract class BaseMojo extends AbstractMojo {
 
             new ProcessExecutor() //
                     .command(command) //
+                    .directory((project.getBasedir()))
                     .exitValueNormal() //
                     .redirectOutput(System.out) //
                     .redirectError(System.out) //
@@ -245,9 +255,42 @@ abstract class BaseMojo extends AbstractMojo {
             }
         }
         command.addAll(arguments);
+        if (this instanceof SchemaGenMojo) {
+            List<String> sources = ((SchemaGenMojo) this).sources();
+            Set<String> javaSourceFiles = new HashSet<>();
+            FileVisitor<? super Path> visitor = new JavaFileVisitor(javaSourceFiles);
+            sources
+                .stream()
+                .forEach(source -> {
+                    Path path = Paths.get(source);
+                    try {
+                        Files.walkFileTree(path, visitor);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException("Error visiting sources", e);
+                    }
+                });
+            command.addAll(javaSourceFiles);
+        }
         log.info("call arguments:\n  -----------------\n  " + command.stream().collect(Collectors.joining("\n  "))
                 + "\n  -----------------");
 
         return command;
+    }
+
+    private class JavaFileVisitor extends SimpleFileVisitor<Path> {
+
+        private final Set<String> javaFiles;
+
+        private JavaFileVisitor(Set<String> javaFiles) {
+            this.javaFiles = javaFiles;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
+            if (file.toString().toLowerCase().endsWith(".java")) {
+                this.javaFiles.add(file.toString());
+            }
+            return FileVisitResult.CONTINUE;
+        }
     }
 }
