@@ -232,4 +232,3 @@ For project maintainers, JAXB and JAXWS versions are controlled by these system 
 ```
 
 The release cycles of the artifacts using these versions are not all in sync so upgrades need to be done with care.
-
