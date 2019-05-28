@@ -11,11 +11,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,7 +75,7 @@ abstract class BaseMojo extends AbstractMojo {
     private List<ArtifactRepository> remoteRepositories;
 
     private final JaxCommand cmd;
-
+    
     BaseMojo(JaxCommand cmd) {
         this.cmd = cmd;
     }
@@ -92,7 +95,7 @@ abstract class BaseMojo extends AbstractMojo {
 
             new ProcessExecutor() //
                     .command(command) //
-                    .directory((project.getBasedir()))
+                    .directory(project.getBasedir())
                     .exitValueNormal() //
                     .redirectOutput(System.out) //
                     .redirectError(System.out) //
@@ -171,10 +174,10 @@ abstract class BaseMojo extends AbstractMojo {
         Stream<String> fullDependencyEntries = Stream.concat(//
                 dependencyEntries, //
                 pluginDependencyEntries);
-
+        
         StringBuilder classpath = new StringBuilder();
         classpath.append( //
-                Stream.concat(artifactEntry, fullDependencyEntries) //
+                Stream.concat(artifactEntry, fullDependencyEntries)
                         .collect(Collectors.joining(File.pathSeparator)));
 
         ////////////////////////////////////////////////////////
@@ -198,8 +201,17 @@ abstract class BaseMojo extends AbstractMojo {
                 classpath.append(file.getAbsolutePath());
             }
         }
+        
+        Set<String> jClasspath = null;
+        if (this instanceof SchemaGenMojo  && "true".equals(((SchemaGenMojo) this).shortenClassPaths())) {           
+            jClasspath = shortenCp(Arrays.stream(classpath.toString().split(File.pathSeparator)), "java", ((SchemaGenMojo) this).jClasspath());
+            log.debug("Shortened java classpath: " + jClasspath.toString());
+            classpath.setLength(0);
+            jClasspath.stream().forEach(jar -> classpath.append(jar.substring(jar.lastIndexOf(File.separatorChar) + 1, jar.length()) + File.pathSeparator));
+        }
+        
         log.debug("isolated classpath for call to " + cmd + "=\n  "
-                + classpath.toString().replace(File.pathSeparator, File.pathSeparator + "\n  "));
+            + classpath.toString().replace(File.pathSeparator, File.pathSeparator + "\n  "));
 
         final String javaExecutable = System.getProperty("java.home") + File.separator + "bin" + File.separator
                 + "java";
@@ -251,11 +263,24 @@ abstract class BaseMojo extends AbstractMojo {
                 }
 
                 command.add("-cp");
-                command.add(cp.stream().collect(Collectors.joining(File.pathSeparator)));
+                
+                if (this instanceof SchemaGenMojo && "true".equals(((SchemaGenMojo) this).shortenClassPaths())) {
+                    Set<String> sClasspath = shortenCp(cp.stream(), "schemagen", ((SchemaGenMojo) this).jClasspath());
+                    log.debug("Shortened schemagen classpath: " + sClasspath.toString());
+
+                    StringBuilder cpBuilder = new StringBuilder();
+                    sClasspath.stream().forEach(jar -> cpBuilder.append(jar.substring(jar.lastIndexOf(File.separatorChar) + 1, jar.length()) + File.pathSeparator));
+                    jClasspath.stream().forEach(jar -> cpBuilder.append(jar.substring(jar.lastIndexOf(File.separatorChar) + 1, jar.length()) + File.pathSeparator));
+                    
+                    command.add(cpBuilder.toString());
+                } else {
+                    command.add(cp.stream().collect(Collectors.joining(File.pathSeparator)));   
+                }
             }
         }
         command.addAll(arguments);
         if (this instanceof SchemaGenMojo) {
+            
             List<String> sources = ((SchemaGenMojo) this).sources();
             Set<String> javaSourceFiles = new HashSet<>();
             FileVisitor<? super Path> visitor = new JavaFileVisitor(javaSourceFiles);
@@ -275,6 +300,27 @@ abstract class BaseMojo extends AbstractMojo {
                 + "\n  -----------------");
 
         return command;
+    }
+
+    private Set shortenCp(Stream<String> allAritifactEntries, String type, String classpath) {
+        Set jarList= new TreeSet<String>();
+        allAritifactEntries.forEach((entry) -> {
+            Path srcPath = Paths.get(entry);
+            if(srcPath.toFile().exists()) {
+                String fileName = classpath + File.separatorChar + srcPath.getFileName().toString();
+                File destinationFile = new File(fileName);
+                jarList.add(fileName);
+                destinationFile.getParentFile().mkdirs();
+                try {
+                    Files.copy(srcPath, destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new UncheckedIOException("Error shortening "+ type +" classpath", e);
+                }
+            } else {
+                getLog().debug("Source file while shortening does not exist");
+            }
+        });
+        return jarList;
     }
 
     private class JavaFileVisitor extends SimpleFileVisitor<Path> {

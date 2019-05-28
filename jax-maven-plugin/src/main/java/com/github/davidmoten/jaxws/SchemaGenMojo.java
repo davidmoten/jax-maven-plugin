@@ -14,6 +14,12 @@ public final class SchemaGenMojo extends BaseMojo implements HasClasspathScope {
 
     @Parameter
     private List<String> sources;
+    
+    @Parameter
+    private String jClasspath;
+    
+    @Parameter(name = "shortenClassPaths", defaultValue = "false")
+    private String shortenClassPaths;
 
     public SchemaGenMojo() {
         super(JaxCommand.SCHEMAGEN);
@@ -26,6 +32,14 @@ public final class SchemaGenMojo extends BaseMojo implements HasClasspathScope {
 
     public List<String> sources() {
         return sources == null ? new ArrayList<>() : sources;
+    }
+    
+    public String jClasspath() {
+        return jClasspath;
+    }
+
+    public String shortenClassPaths() {
+        return shortenClassPaths;
     }
 
 }
