@@ -16,6 +16,10 @@ Status: *released to Maven Central*
 * supports JAXB extensions
 * [unit tested](jax-maven-plugin-test) on Oracle JDK 8, 9 and OpenJDK 10, 11 (using Travis)
 
+## Constraints
+* requires Maven 3.5+
+
+
 ## History
 The development of this plugin was motivated by [problems](https://github.com/mojohaus/jaxb2-maven-plugin/issues/43) with the *jaxb2-maven-plugin* with Java 9+. My company's codebase used *jaxb2-maven-plugin* in ~15 locations (the `xjc` goal and others) and we wanted to move to OpenJDK 11+ given the EOL (unpaid) for Oracle Java 8 in January 2019.
 
