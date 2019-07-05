@@ -169,7 +169,7 @@ Note that if you don't specify the destination directories for generated code an
 ## schemagen
 The `schemagen` goal has a special configuration option to allow you to specify all java source files in a directory as input. For example:
 
-```java
+```xml
 <plugin>
     <groupId>com.github.davidmoten</groupId>
     <artifactId>jax-maven-plugin</artifactId>
@@ -224,7 +224,7 @@ A big thank you to @Glebcher601 for contributing extension support!
 ## Update the JAXB/JAXWS version used
 For project maintainers, JAXB and JAXWS versions are controlled by these system properties in the parent [pom.xml](pom.xml):
 
-```
+```xml
 <!-- e.g. jaxb-ri -->
 <com.sun.xml.bind.version>2.3.0.1</com.sun.xml.bind.version>
 
