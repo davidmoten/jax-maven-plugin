@@ -9,7 +9,7 @@
         <version>0.1</version>
     </parent>
     <artifactId>jax-maven-plugin-parent</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
@@ -73,7 +73,7 @@
         <connection>${scm.url}</connection>
         <developerConnection>${scm.url}</developerConnection>
         <url>${scm.url}</url>
-        <tag>0.1.8</tag>
+        <tag>0.1.1</tag>
     </scm>
 
     <modules>
