@@ -1,5 +1,5 @@
 # jax-maven-plugin
-<a href="https://travis-ci.org/davidmoten/jax-maven-plugin"><img src="https://travis-ci.org/davidmoten/jax-maven-plugin.svg"/></a><br/>
+<a href="https://github.com/davidmoten/jax-maven-plugin/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/jax-maven-plugin/actions/workflows/ci.yml/badge.svg"/></a><br/>
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/jax-maven-plugin)
 
 Status: *released to Maven Central*
