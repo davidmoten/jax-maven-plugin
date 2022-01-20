@@ -27,7 +27,7 @@
         <com.sun.xml.bind.version>2.3.0.1</com.sun.xml.bind.version>
 
         <!-- e.g. jaxws-rt -->
-        <com.sun.xml.ws.version>2.3.2</com.sun.xml.ws.version>
+        <com.sun.xml.ws.version>3.0.2</com.sun.xml.ws.version>
 
         <!-- e.g. jaxb-api -->
         <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
