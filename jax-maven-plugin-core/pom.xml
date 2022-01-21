@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-tools</artifactId>
-            <version>3.0.2</version>
+            <version>${jaxws.tools.version}</version>
             <scope>compile</scope>
         </dependency>
         

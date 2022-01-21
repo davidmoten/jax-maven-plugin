@@ -20,8 +20,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.8</maven.compiler.target>
         <compiler.plugin.version>3.8.0</compiler.plugin.version>
-        <!-- note that if you change the jaxb version you need to change 
-            the hard-coded version in XjcMojo.java as well -->
+
+        <jakarta.xml.ws-api.version>3.0.1</jakarta.xml.ws-api.version>
+        <jaxws.tools.version>3.0.2</jaxws.tools.version>
+        <jakarta.xml.bind-api.version>3.0.1</jakarta.xml.bind-api.version>
+        <jaxb.runtime.version>3.0.1</jaxb.runtime.version>
 
         <junit.version>4.12</junit.version>
         <scm.url>scm:git:https://github.com/davidmoten/jax-maven-plugin.git</scm.url>

@@ -18,13 +18,13 @@
 		<dependency>
 		    <groupId>jakarta.xml.bind</groupId>
 		    <artifactId>jakarta.xml.bind-api</artifactId>
-		    <version>3.0.1</version>
+		    <version>${jakarta.xml.bind-api.version}</version>
 		</dependency>
 		
 		<dependency>
 		    <groupId>org.glassfish.jaxb</groupId>
 		    <artifactId>jaxb-runtime</artifactId>
-		    <version>3.0.1</version>
+		    <version>${jaxb.runtime.version}</version>
 		    <scope>runtime</scope>
 		</dependency>
         
