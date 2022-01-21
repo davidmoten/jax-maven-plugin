@@ -15,6 +15,7 @@ Status: *released to Maven Central*
 * optionally adds generated source and resources to the maven build path and artifact
 * supports JAXB extensions
 * [unit tested](jax-maven-plugin-test) on Oracle JDK 8, 9 and OpenJDK 10, 11 (using Travis)
+* uses Jakarta EE dependencies as of 0.2
 
 ## Constraints
 * requires Maven 3.5+
