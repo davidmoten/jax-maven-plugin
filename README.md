@@ -198,6 +198,9 @@ The `schemagen` goal has a special configuration option to allow you to specify 
 ```
 
 ## Using JAXB extensions
+
+Note: only valid pre migration to Jakarta dependencies. To use *jaxb2-basics* you'll need to use version 0.1.8 of *jax-maven-plugin*. version 0.2 of *jax-maven-plugin* is not compatible with *jaxb2-basics*.
+
 If you add dependencies to the classpath used by `xjc` and include the `-extension` flag then you can customise the generated code. To add dependencies to the classpath of `xjc` use the `<dependencies>` element as below (let's add the [*jaxb2-basics*](https://github.com/highsource/jaxb2-basics/wiki/Using-JAXB2-Basics-Plugins) dependency):
 
 ```xml
@@ -221,19 +224,3 @@ If you add dependencies to the classpath used by `xjc` and include the `-extensi
 A fully worked example that generates `hashCode`, `equals` and `toString` methods in generated classes is in [jax-maven-plugin-tests](jax-maven-plugin-test/pom.xml).
 
 A big thank you to @Glebcher601 for contributing extension support!
-
-## Update the JAXB/JAXWS version used
-For project maintainers, JAXB and JAXWS versions are controlled by these system properties in the parent [pom.xml](pom.xml):
-
-```xml
-<!-- e.g. jaxb-ri -->
-<com.sun.xml.bind.version>2.3.0.1</com.sun.xml.bind.version>
-
-<!-- e.g. jaxws-rt -->
-<com.sun.xml.ws.version>2.3.1</com.sun.xml.ws.version>
-
-<!-- e.g. jaxb-api -->
-<javax.xml.bind.version>2.3.1</javax.xml.bind.version>
-```
-
-The release cycles of the artifacts using these versions are not all in sync so upgrades need to be done with care.
