@@ -22,6 +22,18 @@
         <!-- Java 11 needs these so the generated classes will compile -->
         <!-- Java 8, 9, 10 don't seem to be bothered by the existence of 
             these deps -->
+            
+        <dependency>
+          <groupId>jakarta.xml.ws</groupId>
+          <artifactId>jakarta.xml.ws-api</artifactId>
+          <version>3.0.1</version>
+        </dependency>  
+            
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>3.0.1</version>
+        </dependency>
 
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
