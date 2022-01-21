@@ -2,8 +2,7 @@ package com.github.davidmoten.xjc;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.lang.reflect.Method;
-
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dummy.ObjectFactory;
@@ -20,11 +19,12 @@ public class XjcPluginTest {
     }
 
     @Test
+    @Ignore // not supported for jakarta because jaxb2-basics (jaxb plugins) doesn't support jakarta yet
     public void testJaxb2PluginGeneratedCodePresent() {
-        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "toString"));
-        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "equals"));
-        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "hashCode"));
-        System.out.println("Jaxb2-basics plugins worked correctly");
+//        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "toString"));
+//        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "equals"));
+//        assertNotNull(getDeclaredMethod(plugin.support.Param.class, "hashCode"));
+//        System.out.println("Jaxb2-basics plugins worked correctly");
     }
 
     @Test
@@ -33,14 +33,14 @@ public class XjcPluginTest {
         System.out.println("episode file generated correctly");
     }
 
-    private Method getDeclaredMethod(Class<?> clazz, String methodName)
-    {
-        for (Method method : clazz.getDeclaredMethods()) {
-          if(method.getName().equals(methodName)) {
-            return method;
-          }
-        }
-
-        throw new RuntimeException(new NoSuchMethodException(methodName));
-    }
+//    private Method getDeclaredMethod(Class<?> clazz, String methodName)
+//    {
+//        for (Method method : clazz.getDeclaredMethods()) {
+//          if(method.getName().equals(methodName)) {
+//            return method;
+//          }
+//        }
+//
+//        throw new RuntimeException(new NoSuchMethodException(methodName));
+//    }
 }
