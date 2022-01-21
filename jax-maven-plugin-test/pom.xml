@@ -73,11 +73,12 @@
                 <artifactId>jax-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
                 <dependencies>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-basics</artifactId>
-                        <version>${jaxb2.basics.version}</version>
-                    </dependency>
+                <!--  move to jakarta not supported by jaxb2-basics -->
+<!--                     <dependency> -->
+<!--                         <groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!--                         <artifactId>jaxb2-basics</artifactId> -->
+<!--                         <version>${jaxb2.basics.version}</version> -->
+<!--                     </dependency> -->
                 </dependencies>
                 <executions>
                     <execution>
@@ -201,31 +202,32 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>from-dtd-usePlugins</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                        <configuration>
-                            <systemProperties>
-                                <enableExternalEntityProcessing>true</enableExternalEntityProcessing>
-                            </systemProperties>
-                            <arguments>
-                                <argument>-extension</argument>
-                                <argument>-verbose</argument>
-                                <argument>-Xequals</argument>
-                                <argument>-XhashCode</argument>
-                                <argument>-XtoString</argument>
-                                <argument>-d</argument>
-                                <argument>${jaxb.generated}</argument>
-                                <argument>-p</argument>
-                                <argument>plugin.support</argument>
-                                <argument>-dtd</argument>
-                                <argument>${project.basedir}/src/main/dtd/logger.dtd</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
+                    <!--  moving to jakarta means that jaxb2-basics (plugins) is broken -->
+<!--                     <execution> -->
+<!--                         <id>from-dtd-usePlugins</id> -->
+<!--                         <phase>generate-sources</phase> -->
+<!--                         <goals> -->
+<!--                             <goal>xjc</goal> -->
+<!--                         </goals> -->
+<!--                         <configuration> -->
+<!--                             <systemProperties> -->
+<!--                                 <enableExternalEntityProcessing>true</enableExternalEntityProcessing> -->
+<!--                             </systemProperties> -->
+<!--                             <arguments> -->
+<!--                                 <argument>-extension</argument> -->
+<!--                                 <argument>-verbose</argument> -->
+<!--                                 <argument>-Xequals</argument> -->
+<!--                                 <argument>-XhashCode</argument> -->
+<!--                                 <argument>-XtoString</argument> -->
+<!--                                 <argument>-d</argument> -->
+<!--                                 <argument>${jaxb.generated}</argument> -->
+<!--                                 <argument>-p</argument> -->
+<!--                                 <argument>plugin.support</argument> -->
+<!--                                 <argument>-dtd</argument> -->
+<!--                                 <argument>${project.basedir}/src/main/dtd/logger.dtd</argument> -->
+<!--                             </arguments> -->
+<!--                         </configuration> -->
+<!--                     </execution> -->
                     <execution>
                         <id>schemagen</id>
                         <phase>generate-sources</phase>
