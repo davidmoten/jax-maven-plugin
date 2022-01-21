@@ -24,15 +24,15 @@
             these deps -->
             
         <dependency>
-          <groupId>jakarta.xml.ws</groupId>
-          <artifactId>jakarta.xml.ws-api</artifactId>
-          <version>3.0.1</version>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>${jakarta.xml.ws-api.version}</version>
         </dependency>  
             
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>3.0.1</version>
+            <version>${jakarta.xml.bind-api.version}</version>
         </dependency>
 
         <dependency>
