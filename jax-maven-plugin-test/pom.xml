@@ -15,7 +15,7 @@
         <jaxws.generated.classes>${project.build.directory}/generated-classes/jaxws</jaxws.generated.classes>
         <jaxws.generated.resources>${project.build.directory}/generated-resources/jaxws</jaxws.generated.resources>
         <javadoc.version>3.3.2</javadoc.version>
-        <jaxb2.basics.version>1.11.1</jaxb2.basics.version>
+        <jaxb2.basics.version>1.11.1-PUBLISHED-BY-MISTAKE</jaxb2.basics.version>
     </properties>
 
     <dependencies>
