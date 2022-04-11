@@ -21,7 +21,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <compiler.plugin.version>3.10.1</compiler.plugin.version>
 
-        <jakarta.xml.ws-api.version>3.0.1</jakarta.xml.ws-api.version>
+        <jakarta.xml.ws-api.version>4.0.0</jakarta.xml.ws-api.version>
         <jaxws.tools.version>3.0.2</jaxws.tools.version>
         <jakarta.xml.bind-api.version>3.0.1</jakarta.xml.bind-api.version>
         <jaxb.runtime.version>3.0.2</jaxb.runtime.version>
