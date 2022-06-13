@@ -24,7 +24,7 @@
         <jakarta.xml.ws-api.version>3.0.1</jakarta.xml.ws-api.version>
         <jaxws.tools.version>3.0.2</jaxws.tools.version>
         <jakarta.xml.bind-api.version>3.0.1</jakarta.xml.bind-api.version>
-        <jaxb.runtime.version>3.0.2</jaxb.runtime.version>
+        <jaxb.runtime.version>4.0.0</jaxb.runtime.version>
 
         <junit.version>4.13.2</junit.version>
         <scm.url>scm:git:https://github.com/davidmoten/jax-maven-plugin.git</scm.url>
