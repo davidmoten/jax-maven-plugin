@@ -11,7 +11,7 @@
 
     <properties>
         <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
-        <version.slf4j>1.7.36</version.slf4j>
+        <version.slf4j>2.0.2</version.slf4j>
     </properties>
 
     <dependencies>
