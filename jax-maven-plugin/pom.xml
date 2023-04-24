@@ -10,7 +10,7 @@
     <packaging>maven-plugin</packaging>
 
     <properties>
-        <maven.plugin.version>3.6.0</maven.plugin.version>
+        <maven.plugin.version>3.8.2</maven.plugin.version>
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
     </properties>
 
