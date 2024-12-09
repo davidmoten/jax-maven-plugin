@@ -14,7 +14,7 @@
         <jaxws.generated.sources>${project.build.directory}/generated-sources/jaxws</jaxws.generated.sources>
         <jaxws.generated.classes>${project.build.directory}/generated-classes/jaxws</jaxws.generated.classes>
         <jaxws.generated.resources>${project.build.directory}/generated-resources/jaxws</jaxws.generated.resources>
-        <javadoc.version>3.11.1</javadoc.version>
+        <javadoc.version>3.11.2</javadoc.version>
         <jaxb2.basics.version>1.11.1</jaxb2.basics.version>
     </properties>
 
