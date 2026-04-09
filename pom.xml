@@ -23,7 +23,7 @@
 
         <jakarta.xml.ws-api.version>3.0.1</jakarta.xml.ws-api.version>
         <jaxws.tools.version>3.0.2</jaxws.tools.version>
-        <jakarta.xml.bind-api.version>3.0.1</jakarta.xml.bind-api.version>
+        <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
         <jaxb.runtime.version>3.0.2</jaxb.runtime.version>
 
         <junit.version>4.13.2</junit.version>
